@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Recommendation Bot</h1>
+        
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <form action="/recommend" method="post">
+            <div class="form-group">
+                <label for="genre">Select a movie genre:</label>
+                <select name="genre" id="genre" required>
+                    <option value="">-- Select Genre --</option>
+                    {% for genre in genres %}
+                    <option value="{{ genre }}">{{ genre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn">Get Recommendations</button>
+        </form>
+    </div>
+</body>
+</html>
