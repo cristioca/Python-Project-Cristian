@@ -55,5 +55,56 @@ def recommend():
                               error=f"Error processing recommendation: {str(e)}",
                               genres=sorted(df['genre'].unique()))
 
+# Search and Filtering Functionality
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query', '').lower()
+    min_year = request.args.get('min_year', '')
+    max_year = request.args.get('max_year', '')
+    min_rating = request.args.get('min_rating', '')
+    
+    try:
+        df = pd.read_csv(DATA_FILE)
+        
+        # Filter by search query (title or description)
+        if query:
+            df = df[df['title'].str.lower().str.contains(query, na=False) | 
+                   df['description'].str.lower().str.contains(query, na=False)]
+        
+        # Filter by year range
+        if min_year and min_year.isdigit():
+            df = df[df['year'].astype(str).str.extract('(\d+)', expand=False).astype(float) >= float(min_year)]
+        
+        if max_year and max_year.isdigit():
+            df = df[df['year'].astype(str).str.extract('(\d+)', expand=False).astype(float) <= float(max_year)]
+        
+        # Filter by minimum rating
+        if min_rating and min_rating.replace('.', '', 1).isdigit():
+            df = df[df['rating'] >= float(min_rating)]
+        
+        # Get results
+        results = df.sort_values(by='rating', ascending=False).head(10).to_dict('records')
+        
+        # Get all genres for the filter dropdown
+        all_genres = []
+        for genre_list in df['genre'].dropna():
+            genres = [g.strip() for g in genre_list.split(',')]
+            all_genres.extend(genres)
+        genres = sorted(list(set(all_genres)))
+        
+        return render_template('search_results.html', 
+                              results=results, 
+                              query=query,
+                              min_year=min_year,
+                              max_year=max_year,
+                              min_rating=min_rating,
+                              genres=genres)
+    except Exception as e:
+        return render_template('index.html', error=f"Error searching: {str(e)}")
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

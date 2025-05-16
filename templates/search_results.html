@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results - Movie Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        
+        <div class="search-summary">
+            <p>
+                {% if query %}Searching for: <strong>{{ query }}</strong>{% endif %}
+                {% if min_year %}| From year: <strong>{{ min_year }}</strong>{% endif %}
+                {% if max_year %}| To year: <strong>{{ max_year }}</strong>{% endif %}
+                {% if min_rating %}| Min rating: <strong>{{ min_rating }}</strong>{% endif %}
+            </p>
+        </div>
+        
+        {% if results %}
+            <div class="results-count">
+                <p>Found {{ results|length }} movies</p>
+            </div>
+            
+            {% for movie in results %}
+            <div class="movie-card">
+                <div class="movie-poster">
+                    {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }} poster">
+                    {% else %}
+                    <div class="no-poster">No Poster</div>
+                    {% endif %}
+                </div>
+                <div class="movie-details">
+                    <h2 class="movie-title">{{ movie.title }} ({{ movie.year }})</h2>
+                    <div class="movie-rating">Rating: {{ movie.rating }}/10</div>
+                    <div class="movie-genre">{{ movie.genre }}</div>
+                    <p class="movie-description">{{ movie.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <p>No movies found matching your search criteria.</p>
+            </div>
+        {% endif %}
+        
+        <a href="/" class="back-link">Back to Home</a>
+    </div>
+</body>
+</html>

@@ -13,7 +13,7 @@ def scrape_movies():
     os.makedirs('data', exist_ok=True)
     
     # List of genres to scrape from Letterboxd
-    genres = ['action', 'drama', 'comedy', 'thriller', 'horror']
+    genres = ['action', 'drama', 'comedy', 'thriller']
     movie_data = []
     
     # User agent to mimic a browser
@@ -37,8 +37,10 @@ def scrape_movies():
             # Find movie containers (poster items)
             movie_containers = soup.find_all('div', class_='film-poster')
             
+            print("length = ",len(movie_containers))
             # Limit to 10 movies per genre to avoid overloading
             for container in movie_containers[:10]:
+                
                 try:
                     # Get movie details page URL
                     film_link = container.find('a')

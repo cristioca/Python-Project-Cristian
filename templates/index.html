@@ -15,6 +15,34 @@
         </div>
         {% endif %}
         
+         <!-- Search Form -->
+         <div class="search-section">
+            <h2>Search Movies</h2>
+            <form action="/search" method="get">
+                <div class="form-group">
+                    <input type="text" name="query" placeholder="Search by title or description" class="search-input">
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="min_year">From Year:</label>
+                        <input type="number" name="min_year" id="min_year" min="1900" max="2023">
+                    </div>
+                    <div class="form-group half">
+                        <label for="max_year">To Year:</label>
+                        <input type="number" name="max_year" id="max_year" min="1900" max="2023">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="min_rating">Minimum Rating:</label>
+                    <input type="range" name="min_rating" id="min_rating" min="0" max="10" step="0.1" value="0" oninput="this.nextElementSibling.value = this.value">
+                    <output>0</output>
+                </div>
+                <button type="submit" class="btn search-btn">Search</button>
+            </form>
+        </div>
+
+
+
         <form action="/recommend" method="post">
             <div class="form-group">
                 <label for="genre">Select a movie genre:</label>
