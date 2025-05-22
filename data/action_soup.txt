@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+
+<html class="context-client-unknown no-mobile no-js" id="html" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1024" name="viewport"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<meta content="Browse our database of over half a million movies." name="description"/>
+<meta content="https://letterboxd.com/films/genre/action/size/small/" property="og:url"/>
+<meta content="Browse Films" property="og:title"/>
+<meta content="Browse our database of a million titles, by popularity, average rating, etc." property="og:description"/>
+<meta content="https://s.ltrbxd.com/static/img/default-share-7md9L34t.png" property="og:image"/>
+<meta content="173683136069040" property="fb:app_id"/>
+<meta content="Letterboxd" name="application-name"/>
+<meta content="#14181C" name="theme-color"/>
+<meta content="#445566" name="msapplication-TileColor"/>
+<meta content="app-id=1054271011, affiliate-data=11l5KW" name="apple-itunes-app"/>
+<meta content="yes" name="mobile-web-app-capable"/>
+<title>‎Browse Films • Letterboxd</title>
+<script>
+		
+		((r, n) => {
+			r.dataset.useragent = n.userAgent
+			r.dataset.platform = n.platform
+		})(document.documentElement, navigator)
+
+		var isMobile = false,
+			isMobileOptimised = true,
+			renderMobile = false,
+			useStaticFonts = false,
+			disableFrameProtection = false,
+			baseURL = '',
+			staticAssetBaseURL = 'https://s.ltrbxd.com/'.slice(0, -1),
+			successMessages = [],
+			errorMessages = [],
+			stickyMessages = [],
+			globals = {
+			autoAddFilm: false
+				, spinners: {
+					ajax_242d35: 'https://s.ltrbxd.com/static/img/spinner-dark-2x-BA9SNVrD.gif',
+					spinner_12_2C3641: 'https://s.ltrbxd.com/static/img/spinner-dark-2x-BA9SNVrD.gif',
+					spinner_14_20272f: 'https://s.ltrbxd.com/static/img/spinner-dark-2x-BA9SNVrD.gif',
+					spinner_16_161B21: 'https://s.ltrbxd.com/static/img/spinner-dark-2x-BA9SNVrD.gif'
+				}
+			},
+			supermodelCSRF = "",
+			gRecaptchaKey = '6Le3mMIUAAAAAEXbwZ7M1R5jEv0V5xbvj7bgXq2g',
+			geolocation = {
+				country: ""
+			},
+			person = {
+				username: ""
+				, loggedIn: false
+				
+				, showAds: true
+				, role: "guest"
+				, hasExtendedServiceFilters: false
+				, canBulkAddToLists: false
+				, canFilterOwned: false
+				, hasHqRole: false
+				, canHaveHqDashboard: false
+				, hasMemberStatistics: false
+				, blockedMembers: []
+				, showAdultContent: false
+				, validated: null
+				, trusted: false
+				, hasBlocked : function(member) { for (var i = 0; i !== person.blockedMembers.length; i++) {if (person.blockedMembers[i] === member) return true;} return false; }
+				, viewingTags: []
+				, hasMoreTags: true
+				, getCustomPoster : function(uid) { return null; }
+				, getCustomBackdrop : function(uid) { return null; }
+			},
+			disableAds = false,
+			analytic_params = {};
+		
+		
+supermodelCSRF = '8ed37746eff1d47d8403'; geolocation.country = 'RO'; analytic_params['user_type'] = 'Visitor';
+
+	</script>
+<script>
+		window.dataLayer = window.dataLayer || [];
+		window.gtag = window.gtag || function () {
+			dataLayer.push(arguments);
+		};
+		function ga() {}
+	</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D3ECBB4D7L"></script>
+<script>
+		window.dataLayer = window.dataLayer || [];
+		window.gtag = window.gtag || function () {
+			dataLayer.push(arguments);
+		};
+		gtag('js', new Date());
+	
+		analytic_params['template'] = '/object/films-browser';
+		
+		
+
+		if (analytic_params.member_type) {
+			gtag('set', 'user_properties', { 
+				member_type: analytic_params.member_type,
+			});
+			delete analytic_params.member_type;
+		}
+		var config = {
+			...analytic_params,
+			'cookie_domain': 'letterboxd.com', 
+			'optimize_id': 'GTM-TB8HSDN', 
+		};
+		gtag('config', 'G-D3ECBB4D7L', config);
+	</script>
+<script>
+function ASAP(callback) {
+	if (window.__ASAPPED) {
+		callback()
+		return
+	}
+	if (!window.__ASAP) {
+		window.__ASAP = []
+	}
+	window.__ASAP.push(callback)
+}
+</script>
+<script>
+		
+
+		
+			
+		
+
+		
+
+		
+		
+			
+				if ( screen.width < 768 ) {
+					var date = new Date();
+					var maxAge = 365 * 24 * 60 * 60;
+					date.setTime(date.getTime() + maxAge * 1000);
+					var expires = '; expires=' + date.toUTCString();
+					document.cookie = "useMobileSite=yes" + expires + "; path=/; maxAge=" + maxAge;
+					if ( document.cookie && document.cookie.indexOf("useMobileSite=yes") >= 0 ) {
+						window.location.reload(true);
+					} else {
+						// No cookies.  No Mobile version.
+					}
+				}
+			
+		
+	</script>
+<script>
+		window.ramp = window.ramp || {};
+		window.ramp.que = window.ramp.que || [];
+		window.ramp.passiveMode = false; 
+		window.ramp.forcePath = '';
+		window.ramp.custom_tags = [
+			'', 
+			'', 
+			'', 
+			'', 
+			'', 
+			''
+		];
+	</script>
+<script src="//cdn.intergient.com/1024338/72804/ramp_config.js"></script>
+<script>
+		window._pwGA4PageviewId = ''.concat(Date.now());
+		window.dataLayer = window.dataLayer || [];
+		window.gtag = window.gtag || function () { 
+			dataLayer.push(arguments);
+		};
+		gtag('js', new Date());
+		gtag('config', 'G-L0W7RDZXX3', { 'send_page_view': false });
+		gtag(
+			'event',
+			'ramp_js',
+			{
+				'send_to': 'G-L0W7RDZXX3',
+				'pageview_id': window._pwGA4PageviewId
+			}
+		);
+		
+		(function() {
+			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			window.isAndroid = new RegExp("android", "i").test(userAgent);
+			window.isIOS = new RegExp("iPad|iPhone|iPod", "i").test(userAgent) && !window.MSStream;
+			window.adsLocation = 'RO';
+		})();
+	</script>
+<link href="/manifest.json" rel="manifest"/>
+<link href="/humans.txt" rel="author" type="text/plain"/>
+<link color="#445566" href="https://s.ltrbxd.com/static/img/letterboxd-decal-l-16px-DorUFlWn.svg" rel="mask-icon"/>
+<link href="https://s.ltrbxd.com/static/img/touch-icon-192x192-lO1g3Ot4.png" rel="shortcut icon" sizes="196x196"/>
+<link href="/favicon.ico" rel="shortcut icon"/>
+<link href="/static/opensearch.xml" rel="search" title="Letterboxd" type="application/opensearchdescription+xml"/>
+<script crossorigin="" src="https://s.ltrbxd.com/static/js/es/main-B-52uJY0.js" type="module"></script>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B5Qt9EMX.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BCTBTwm7.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D6-XlEtG.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B7pRgGH2.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/msN89aGx.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/03U_i1H8.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BIa8E6MJ.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/nZmv-elc.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CWswDIAa.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BLpqPwTf.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/C3Ay1Ke8.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CkhgB9_0.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/qt9y7WI1.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CXZooSEu.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CUcMfv5U.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CbXmRM-a.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Cc6V9pT1.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CwFwcukf.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CNOENfyM.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/C3e4t58V.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DWNyosfN.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DzqXzT7Z.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DbkyL-rk.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CNJCn1L1.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CCPv9W2X.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DOHxIiFh.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DPeCBLXW.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/avz1yegn.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Cu5hmW1B.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CMMPhZm8.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BBVjT85o.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/WzA7o7WZ.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DX6PdSv4.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BTEnm7ee.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BGVqBqED.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DwfP9SC5.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CTIZUcqP.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CDN-OAyH.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/0FcU2bTW.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DcZ-q2nA.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/MQkqja_L.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B0bByq0p.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/AxRaG6ks.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/JpiB-byr.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D0HwSrzf.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DKEljbTo.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CZWCxuiO.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/wdngpc7v.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CnLYH8eu.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/JlwcKcEW.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CPxZyPfx.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Tpuup1_s.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DZEHBdoo.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D2nGpDRe.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DDJBEd1J.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B9fb8Bne.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BpjbagQL.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B4SrOr3T.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BhibFcxs.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/DRICrfwH.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/RTvrqW77.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D9BCH68g.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Dw2-ifts.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/C-OWhFtv.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Da_ezKLj.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D80r1iO4.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D3phq4LA.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/tCl-Ehz6.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Ck6DbinA.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Duz0x7wZ.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BmMBI0RZ.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/D0CRiLCf.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BnElP6sD.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BUuBzXGE.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/COF81Ss-.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CzAAnZkG.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B8XGFczX.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/iq6l9D7b.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BUCDxXFH.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CqrmcGl6.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/CkEEJX_R.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/css/models-BRxvXcjh.css" rel="stylesheet"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/css/main-n1ZUjHuL.css" rel="stylesheet"/>
+<script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+<script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+<script async="" crossorigin="" src="https://s.ltrbxd.com/static/js/es/desktop-D_7DxVix.js" type="module"></script> <link crossorigin="" href="https://s.ltrbxd.com/static/css/desktop-CLBOlNnJ.css" rel="stylesheet"/> <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script> <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+<script>
+	ASAP(function() {
+		if ( $.cookie("letterboxd.admin.signed.in") === person.username ) {
+			successMessages.push("You are signed in as " + person.username);
+			$(function(){$("#header, #content, body").css("background","#543");});
+		}
+	})
+	</script>
+</head>
+<body class="films-page main-nav-films wide film-browser small-poster-grid">
+<script>
+var mainMenu = [];
+
+	mainMenu.push({
+		"id": 1,
+		"url": "/sign-in/", 
+		"name": "Sign in",
+		"cssClassCode": "sign-in-menu",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": true,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 2,
+		"url": "/create-account/", 
+		"name": "Create account",
+		"cssClassCode": "create-account-menu",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 3,
+		"url": "/", 
+		"name": "Home",
+		"cssClassCode": "person-home",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": true,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 4,
+		"url": "/activity/", 
+		"name": "Activity",
+		"cssClassCode": "main-nav-activity",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": true,
+		"showInMainNavForMobile": false,
+		"tooltip": "Activity",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 5,
+		"url": "/films/", 
+		"name": "Films",
+		"cssClassCode": "films-page main-nav-films",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 6,
+		"url": "/lists/", 
+		"name": "Lists",
+		"cssClassCode": "lists-page main-nav-lists",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 7,
+		"url": "/members/", 
+		"name": "Members",
+		"cssClassCode": "main-nav-people",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 8,
+		"url": "/journal/", 
+		"name": "Journal",
+		"cssClassCode": "main-nav-journal",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+	mainMenu.push({
+		"id": 9,
+		"url": "/search/", 
+		"name": "Search results",
+		"cssClassCode": "",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": true,
+		"showInMainNavForMobile": false,
+		"tooltip": "",
+		"selected": false
+	});
+
+</script>
+<header class="site-header js-hide-in-app" data-allow-user-to-add-all-films-to-a-list="true" id="header">
+<div class="site-header-bg"></div>
+<section>
+<h1 class="site-logo"><a class="logo replace" href="/">Letterboxd — Your life in film</a></h1>
+<div class="react-component" data-component-class="globals.comps.NavComponent"></div>
+<form action="#" autocapitalize="off" autocorrect="off" class="signin signin-form js-header-signin-form js-signin" data-recaptcha-action="signin" data-url="/user/login.do" id="signin" method="post" novalidate="novalidate">
+<input name="__csrf" type="hidden" value="placeholder"/>
+<input name="authenticationCode" type="hidden" value=""/>
+<fieldset class="fieldset">
+<div class="fields">
+<div class="col">
+<label for="username">Username</label>
+<input autocomplete="email" class="field signin-field" data-focus-control="signingIn" id="username" inputmode="email" name="username" tabindex="1" type="email" value=""/>
+</div>
+<div class="col">
+<label for="password">Password</label>
+<input autocomplete="current-password" class="field signin-field" id="password" name="password" tabindex="2" type="password" value=""/>
+</div>
+<div class="signin-actions">
+<label class="option-label -checkbox -small" for="remember">
+<input class="checkbox" id="remember" name="remember" tabindex="3" type="checkbox" value="true"/><i class="substitute"></i>
+<span class="focus">Remember<span class="mob-hide"> me</span></span>
+</label>
+<p class="reset" tabindex="5"><a class="reset-password-link" href="/user/request-password-reset" target="_top">Forgotten<span class="elongated"> username or password</span>?</a></p>
+</div>
+<div class="col buttons">
+<div class="button-container"><input class="button -action button-green" tabindex="4" type="submit" value="Sign in"/><i></i></div>
+<div class="close js-close-signin">×</div>
+</div>
+</div>
+</fieldset>
+<div class="errormessage" id="signin-message"></div>
+</form>
+<p class="show-when-logged-in">
+<a class="button -action button-action button-add" data-bs-target="#diary-entry-form-modal" data-bs-toggle="modal" data-diary-entry-form-options='{"mode": "search", "showViewingableSuggestion": true}' href="" id="add-new-button">Log</a>
+</p>
+<div class="add-menu-wrapper show-when-logged-in">
+<a class="button -action button-action button-add-menu" href="#" id="add-menu-button">
+<span class="toggle"></span>
+<em>More...</em>
+</a>
+<ul id="add-menu">
+<li><a href="/list/new/">Start a new list…</a></li>
+<li><a class="js-add-all-films-on-page-to-list" href="#">Add all films to a list…</a></li>
+<li><a class="js-add-all-films-on-page-to-watchlist" data-action="/watchlist/add-films/" href="#">Add all films to watchlist</a></li>
+</ul>
+</div>
+<div aria-hidden="true" aria-labelledby="diary-entry-form-modal-title" attributestext="" class="modal fade diary-entry-form-modal" data-bs-backdrop="static" id="diary-entry-form-modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="diary-entry-form-modal-title">
+<span data-js-label-for="search">Add to your films…</span>
+<span data-js-label-for="compose" hidden="">I watched…</span>
+<span data-js-label-for="edit" hidden="">Edit diary entry</span>
+</h5>
+<button aria-controls="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" aria-label="Return to search" class="diary-entry-form-wizard-backtrigger" data-js-trigger="wizardback" disabled="" hidden="" type="button">
+<span class="label">Back</span>
+</button>
+<button aria-label="Close" class="modal-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<form action="/s/save-diary-entry" aria-live="polite" class="diary-entry-form js-diary-entry-form" data-diary-entry-form-options='{"id": "20a675bb-55c0-42ef-adb8-80af6e0d1750"}' data-js-target="diary-entry-form" id="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" method="post" novalidate="novalidate">
+<input name="__csrf" type="hidden" value="placeholder"/>
+<input id="frm-viewing-id" name="viewingId" type="hidden" value=""/>
+<input id="frm-viewingable-uid" name="viewingableUid" type="hidden" value=""/>
+<section aria-label="1 of 2" aria-roledescription="step" class="diary-entry-form-wizard-step -search" data-js-wizard-step="search" role="group">
+<div class="body">
+<div class="formrow">
+<label class="_sr-only">Name of Film</label>
+<input class="field-large field -reversed -large js-viewingable-type-input" data-url="/s/autocompletefilm" placeholder="Search for film…" type="text"/>
+<div class="viewingablesuggestion js-viewingablesuggestion" hidden="">
+<span class="label">Or add</span>
+<button class="trigger welltrigger" data-js-trigger="suggestion" type="button"><span class="label js-label viewingablelabel"></span></button>
+</div>
+</div>
+</div>
+</section>
+<section aria-label="2 of 2" aria-roledescription="step" class="diary-entry-form-wizard-step -compose fields-reversed" data-js-wizard-step="compose" hidden="" role="group">
+<header class="header js-header">
+</header>
+<aside class="figure">
+<figure class="poster-list -p150 no-hover js-poster-preview">
+<div class="poster no-poster">
+<span class="frame"></span>
+</div>
+</figure>
+</aside>
+<div class="body">
+<div class="formrow datefields">
+<div class="fieldgroup -specifieddate">
+<label class="option-label -checkbox -default -reversed js-specifiy-date" for="frm-specify-date">
+<input class="checkbox" id="frm-specify-date" name="specifiedDate" type="checkbox" value="true"/><i class="substitute"></i>
+<span class="label js-specify-date-label" id="frm-specify-date-label">Add to your diary?</span>
+</label>
+<div class="specifydatecta js-specify-date-cta" hidden="">Watched on <button class="trigger welltrigger" data-js-trigger="datepicker" type="button"><span class="label"></span></button></div>
+</div>
+<div class="fieldgroup -rewatch js-fieldgroup-rewatch">
+<label class="option-label -checkbox -default" for="frm-rewatch" id="frm-rewatch-label">
+<input class="checkbox" id="frm-rewatch" name="rewatch" type="checkbox" value="true"/><i class="substitute"></i> 
+										I’ve watched this before
+									</label>
+</div>
+<input id="frm-viewing-date-string" name="viewingDateStr" type="hidden" value=""/>
+</div>
+<div class="formrow reviewfields js-reviewfields -is-not-spoilersvisible">
+<div class="inner">
+<textarea class="field reviewfield" id="frm-review" name="review" placeholder="Add a review…"></textarea>
+<div class="spoilers">
+<label class="spoilercheckbox option-label -checkbox -default" for="frm-spoilers">
+<input class="checkbox" id="frm-spoilers" name="containsSpoilers" type="checkbox" value="true"/><i class="substitute"></i>  
+											Contains spoilers
+										</label>
+<div class="moderatornote form-note js-spoilers-locked-note" hidden="">
+<p>A moderator has locked spoilers for this review</p>
+</div>
+</div>
+</div>
+</div>
+<div class="formrow tagslikeratingfields">
+<div class="fieldgroup -tags -has-topnote add-tags">
+<label for="frm-tags">Tags</label>
+<p class="form-note note -topnote">Press <kbd>Tab</kbd> to complete, <kbd>Enter</kbd> to create</p>
+<div class="autocomplete-tags">
+<div id="tag-container">
+<input class="tag-input-field field" data-url="/s/autocompletetags" id="frm-tags" name="tags" placeholder="eg. netflix" type="text"/>
+</div>
+<div class="js-autocomplete-current-tags" id="current-tags">
+</div>
+</div>
+</div>
+<div class="fieldgroup -rating -has-topnote">
+<label>Rating</label>
+<p class="form-note note rating-text"></p>
+<input id="frm-rating" max="10" min="0" name="rating" step="1" type="range" value="0"/>
+<div class="rateit js-rateit" data-rateit-backingfld="#frm-rating" data-rateit-resetable="true" data-rateit-starheight="26" data-rateit-starwidth="13"></div>
+</div>
+<div class="fieldgroup -like">
+<label class="option-label -like">
+<input class="ajax-working like-checkbox" name="liked" type="checkbox" value="true"/><i class="substitute"></i> 
+										Like
+									</label>
+</div>
+</div>
+</div>
+</section>
+</form>
+</div>
+<div class="modal-footer js-modal-footer" hidden="">
+<div class="diary-entry-form-controls" data-diary-entry-form-controls-for="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" hidden="">
+<div class="modal-action-group privacygroup show-for-pv">
+<div aria-hidden="true" class="privacycontrols js-privacycontrols">
+<label class="label" for="frm-privacy-policy"> 
+								Privacy mode
+								<span class="s icon-14 icon-tip" data-js-trigger="tooltip" target="_blank" title="Control who sees the rating, review, tags and like for this entry"><span class="icon"></span>(Help)</span>
+</label>
+<select class="select" form="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" hidden="" id="frm-privacy-policy" name="privacyPolicyStr">
+<option value="">Default</option>
+<option value="Anyone">Anyone (public)</option>
+<option value="Friends">Close Friends (selected by you)</option>
+<option value="You">You (private)</option>
+</select>
+<div class="privacy-policy-menu dropdown-wrapper js-privacy-policy-menu -pending">
+<button aria-controls="privacy-policy-menu-a7c8e5bd-5f8d-475c-82eb-c31cedb251f9-dropdown" aria-expanded="false" aria-haspopup="listbox" aria-label="Select privacy policy" class="privacy-policy-menu-trigger -default dropdown-trigger" id="privacy-policy-menu-trigger-a7c8e5bd-5f8d-475c-82eb-c31cedb251f9" type="button">
+<span class="label js-label">…</span>
+</button>
+<div aria-labelledby="privacy-policy-menu-trigger-a7c8e5bd-5f8d-475c-82eb-c31cedb251f9" class="dropdown-menu -legacy dropdown-listbox privacy-policy-menu-dropdown" id="privacy-policy-menu-a7c8e5bd-5f8d-475c-82eb-c31cedb251f9-dropdown" role="listbox">
+<div class="header">
+<h3 class="title js-menutitle"></h3>
+</div>
+<div class="dropdown-menulist">
+<div class="menuitem -trigger -has-icon js-dropdown-child" role="none">
+<button data-dismiss="dropdown" data-value="Anyone" role="option" type="button">
+<svg class="glyph" height="16" role="presentation" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 .5a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15Zm1.73 8.25H6.27c.07 1.53.36 2.93.8 3.96.4.9.8 1.29.93 1.29s.53-.38.92-1.3c.45-1.02.74-2.42.81-3.95Zm-4.96 0H2.05a6 6 0 0 0 3.79 4.85 12.7 12.7 0 0 1-1.07-4.85Zm9.18 0h-2.72a12.7 12.7 0 0 1-1.07 4.85 6 6 0 0 0 3.8-4.85ZM5.84 2.4l-.18.07a6 6 0 0 0-3.61 4.78h2.72A12.7 12.7 0 0 1 5.84 2.4ZM8 2c-.13 0-.53.38-.92 1.3a11.66 11.66 0 0 0-.81 3.95h3.46a11.66 11.66 0 0 0-.8-3.96c-.38-.85-.74-1.24-.9-1.28L8 2Zm2.16.4.01.02c.59 1.22.98 2.92 1.06 4.83h2.72a6 6 0 0 0-3.79-4.85Z"></path></svg>
+<span class="label js-label">Anyone (public)</span>
+</button>
+</div>
+<div class="menuitem -trigger -has-icon js-dropdown-child" role="none">
+<button data-dismiss="dropdown" data-value="Friends" role="option" type="button">
+<svg class="glyph" height="16" role="presentation" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 .5a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15ZM8 2a6 6 0 0 0-4.8 2.4 1.04 1.04 0 0 1 1.28.16l.63.63.64-.63a1.04 1.04 0 0 1 1.47 0c.4.4.4 1.06 0 1.47L5.34 7.9a.32.32 0 0 1-.45 0L3.01 6.03a1.04 1.04 0 0 1-.3-.87A5.98 5.98 0 0 0 8 14a6 6 0 0 0 5.29-8.84c.04.3-.06.63-.3.87L11.11 7.9a.32.32 0 0 1-.45 0L8.78 6.03a1.04 1.04 0 1 1 1.47-1.47l.64.63.63-.63a1.03 1.03 0 0 1 1.29-.15A6 6 0 0 0 8 2ZM5.7 9.92a3 3 0 0 0 4.52.1.75.75 0 0 1 1.1 1 4.49 4.49 0 0 1-6.78-.14.75.75 0 0 1 1.16-.96Z"></path></svg>
+<span class="label js-label">Close Friends (selected by you)</span>
+</button>
+</div>
+<div class="menuitem -trigger -has-icon js-dropdown-child" role="none">
+<button data-dismiss="dropdown" data-value="You" role="option" type="button">
+<svg class="glyph" height="16" role="presentation" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7.95 1.25c2.35 0 4.25 1.9 4.25 4.25V6h.3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2V8c0-1.1.9-2 2-2h.2v-.5c0-2.35 1.9-4.25 4.25-4.25ZM12.5 7.5h-9A.5.5 0 0 0 3 8v6c0 .28.22.5.5.5h9a.5.5 0 0 0 .5-.5V8a.5.5 0 0 0-.5-.5ZM8 9.75a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Zm-.05-7A2.75 2.75 0 0 0 5.2 5.5V6h5.5v-.5a2.75 2.75 0 0 0-2.75-2.75Z"></path></svg>
+<span class="label js-label">You (private)</span>
+</button>
+</div>
+<div class="menuitem -divider" role="none">
+<hr/>
+</div>
+<div class="menuitem -trigger -has-icon -has-policy-icon js-dropdown-child" role="none">
+<button data-default="true" data-dismiss="dropdown" data-value="" role="option" type="button">
+<svg class="glyph" height="16" role="presentation" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M11.79 7a.7.7 0 0 1 .64.44l.3.77 1 .58.82-.12a.7.7 0 0 1 .7.34l.27.48a.7.7 0 0 1-.05.78l-.5.65v1.16l.51.65a.7.7 0 0 1 .06.78l-.28.48a.7.7 0 0 1-.7.34l-.8-.12-1.02.58-.3.77a.7.7 0 0 1-.64.44h-.58a.7.7 0 0 1-.65-.44l-.3-.77-1-.58-.82.12a.7.7 0 0 1-.7-.34l-.27-.48a.7.7 0 0 1 .05-.78l.51-.65v-1.16l-.52-.65a.7.7 0 0 1-.05-.78l.27-.48a.7.7 0 0 1 .7-.34l.81.12 1.03-.58.3-.77a.7.7 0 0 1 .64-.44h.57ZM6.55 8.9h.1L6.6 9c-.17.28-.25.62-.23.96l.02.17.03.14.04.13h-.3c-1.4.04-2.71.28-3.68.64-.4.14-.7.3-.9.44l-.08.07v.95h5.02A1.7 1.7 0 0 0 6.6 14H0v-2.67C0 10.05 3.02 8.9 6.55 8.9Zm4.95.22a2.37 2.37 0 1 0 0 4.75 2.37 2.37 0 0 0 0-4.74Zm0 1.5a.87.87 0 1 1 0 1.75.87.87 0 0 1 0-1.74ZM6.38 0c1.5 0 2.88 1.53 2.88 3.4 0 1.87-.79 4.1-2.8 4.1-1.9 0-2.81-2.29-2.81-4.15C3.65 1.48 4.87 0 6.38 0Zm0 1.5c-.61 0-1.23.76-1.23 1.85 0 1.5.66 2.65 1.3 2.65.73 0 1.3-1.03 1.3-2.6 0-1.05-.73-1.9-1.37-1.9Z" fill-rule="evenodd"></path></svg>
+<span class="label js-label">Use account default<span class="labelsupplement js-labelsupplement" hidden=""></span></span>
+</button>
+</div>
+</div>
+<div class="dropdown-bodytext -note">
+<p>Your diary date (if set) and watched status for this film will remain publicly visible if you change the privacy level of this entry. Add members to your Close Friends from their profile. Set your account default in <a href="/settings/">Settings</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<label class="option-label -checkbox -default -reversed drafttoggle" for="privacy-policy-draft-20a675bb-55c0-42ef-adb8-80af6e0d1750">
+<input class="checkbox" form="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" id="privacy-policy-draft-20a675bb-55c0-42ef-adb8-80af6e0d1750" name="privacyPolicyDraft" role="switch" type="checkbox" value="true"/><i class="substitute"></i>
+<span class="label">Draft</span>
+</label>
+<div aria-hidden="true" class="draftnote js-privacydraftnote">Draft entries do not appear in your watched films or diary for others, and don’t contribute to your stats.</div>
+</div>
+<div class="modal-action-group formactions">
+<button class="button button-delete -destructive" data-confirm="Are you sure you want to delete this entry? It will disappear from your profile, but remain in your account export bundle for 30 days, in a folder of deleted items." data-js-trigger="delete" disabled="" form="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" id="diary-entry-delete-button" type="button"><span class="label">Delete</span></button>
+<button class="button -action button-action" data-js-trigger="submit" disabled="" form="diary-entry-form-20a675bb-55c0-42ef-adb8-80af6e0d1750" type="submit"><span class="label">Save</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<template id="diary-entry-form-production-masthead-film">
+<div class="production-masthead -inline -film">
+<h3 class="headline-2 primaryname"><span class="name js-name"></span></h3><div class="releaseyear js-releaseyear" hidden=""></div>
+</div>
+</template>
+<template id="diary-entry-form-production-masthead-show">
+<div class="production-masthead -inline -show">
+<h3 class="headline-2 primaryname"><span class="name js-name"></span></h3><div class="releaseyear js-releaseyear" hidden=""></div>
+</div>
+</template>
+<template id="diary-entry-form-production-masthead-season">
+<div class="production-masthead -inline -season">
+<h3 class="headline-3 show"><span class="name js-showname"></span></h3>
+<h3 class="headline-2 primaryname season"><span class="name js-seasonname"></span></h3><div class="seasonairdate js-seasonairdate" hidden=""></div>
+</div>
+</template>
+<template id="diary-entry-form-production-masthead-episode">
+<div class="production-masthead -inline -season">
+<h3 class="headline-3 show"><span class="showname js-showname"></span></h3>
+<h3 class="headline-2 primaryname episode"><span class="name js-episodename"></span></h3>
+</div>
+</template>
+<div style="display:none">
+<div id="add-to-a-list"></div>
+<div data-data-url="/s/load-lists" id="add-to-a-list-modal">
+<form action="/s/add-film-to-list" class="not-expanded modal-container -mini" method="post">
+<input name="__csrf" type="hidden" value="placeholder"/>
+<input class="film-id" name="filmId" type="hidden"/>
+<div class="header">
+<h1 class="title-2">Add <span class="film-name"></span> to lists</h1>
+<div class="text" id="js-modal-warning" style="display: none;"></div>
+<div class="segmented-control js-list-type-toggle -stretched">
+<div class="options">
+<button class="option -selected" data-list-type="public">Public</button>
+<button class="option" data-list-type="private">Private</button>
+</div>
+</div>
+</div>
+<div class="body js-add-to-list-body">
+<div class="list-selection -selected js-list-selection" data-list-type="public">
+<div class="actions">
+<a class="new js-new-list" data-private-list="false" href=""><span class="plus"></span>New list…</a>
+<div class="filter">
+<input autocomplete="off" class="input js-list-filter" id="list-filter-public" placeholder="Type to search" type="text"/><label class="trigger" for="list-filter-public"></label>
+<button class="clear js-list-filter-clear">Clear</button>
+</div>
+</div>
+</div>
+<div class="list-selection js-list-selection" data-list-type="private">
+<div class="actions">
+<a class="new js-new-list" data-private-list="true" href=""><span class="plus"></span>New list…</a>
+<div class="filter">
+<input autocomplete="off" class="input js-list-filter" id="list-filter-private" placeholder="Type to search" type="text"/><label class="trigger" for="list-filter-private"></label>
+<button class="clear js-list-filter-clear">Clear</button>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<div class="status">
+<p class="js-selected-lists-state"></p>
+</div>
+<div class="actions">
+<input class="button -action button-action js-add-to-list-submit" disabled="" type="submit" value="Add"/>
+</div>
+</div>
+</form>
+</div>
+</div>
+<template id="privacy-policy-icon-anyone"><span class="policy-icon -privacy -anyone -circle -is-not-default" data-policy-code="anyone" data-policy-type="privacy"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Reactions visible to anyone"> <svg class="glyph" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M4.385 5.061c.977-.976 2.559-.976 3.536 0l.985 1.041L7.849 7.16l-.018-.007-1.002-1.052c-.375-.372-.98-.372-1.355-.001l-.437.436c-.106.084-.201.18-.286.285L2.824 8.755a.94.94 0 0 0-.28.692.95.95 0 0 0 .282.687l.401.401a.99.99 0 0 0 1.359.006l.836-.847a3.52 3.52 0 0 0 1.385.816L5.68 11.651a2.5 2.5 0 0 1-1.771.737c-.665 0-1.302-.265-1.771-.736l-.407-.407c-.976-.977-.976-2.559 0-3.537zm5.706-3.451c.665 0 1.302.265 1.771.736l.407.407c.976.977.976 2.559 0 3.537L9.615 8.938c-.977.976-2.559.976-3.537-.001l-1.033-.995.415-.416.133-.15.15-.134.403-.405 1.024 1.059c.347.343.889.37 1.264.08l.09-.079 2.651-2.655c.153-.15.248-.347.274-.562l.007-.131a.95.95 0 0 0-.282-.687l-.401-.401a.99.99 0 0 0-1.359-.006l-.842.841c-.408-.39-.888-.663-1.395-.818L8.32 2.347a2.5 2.5 0 0 1 1.771-.737z"></path></svg> </span> <span class="label _sr-only">Reactions visible to anyone</span> </span></template> <template id="privacy-policy-icon-friends"><span class="policy-icon -privacy -friends -circle -is-not-default" data-policy-code="friends" data-policy-type="privacy"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Reactions visible to owner’s Close Friends"> <svg class="glyph" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 .5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13ZM5 9.07a.65.65 0 0 0-1 .83 3.9 3.9 0 0 0 5.89.13.65.65 0 0 0-.97-.87A2.6 2.6 0 0 1 5 9.07ZM5.78 4c-.26 0-.51.1-.7.28l-.58.6-.59-.6a.97.97 0 0 0-1.37 0 .97.97 0 0 0 0 1.38L4.29 7.4a.3.3 0 0 0 .42 0l1.75-1.75A.97.97 0 0 0 5.78 4Zm5 0c-.26 0-.51.1-.7.28l-.58.6-.59-.6a.97.97 0 0 0-1.37 0 .97.97 0 0 0 0 1.38L9.29 7.4a.3.3 0 0 0 .42 0l1.75-1.75A.97.97 0 0 0 10.78 4Z" fill-rule="nonzero"></path></svg> </span> <span class="label _sr-only">Reactions visible to owner’s Close Friends</span> </span></template> <template id="privacy-policy-icon-you"><span class="policy-icon -privacy -you -circle -is-not-default" data-policy-code="you" data-policy-type="privacy"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Reactions only visible to you"> <svg class="glyph" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 1a3.5 3.5 0 0 1 3.5 3.5V5A1.5 1.5 0 0 1 12 6.5v5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 2 11.5v-5A1.5 1.5 0 0 1 3.5 5v-.5A3.5 3.5 0 0 1 7 1zm0 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2zm0-5.5a2 2 0 0 0-2 2V5h4v-.5a2 2 0 0 0-1.851-1.995L7 2.5z" fill-rule="evenodd"></path></svg> </span> <span class="label _sr-only">Reactions only visible to you</span> </span></template> <template id="privacy-policy-icon-draft"><span class="policy-icon -privacy -draft -circle -is-not-default" data-policy-code="draft" data-policy-type="privacy"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Draft entry"> <svg class="glyph" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M12.92 1.08a.24.24 0 0 0-.21-.08c-.8.14-1.57.33-2.33.57a.25.25 0 0 0-.17.17l-.58 1.9a.11.11 0 0 1-.08.08.13.13 0 0 1-.12-.03L8.28 2.54A.27.27 0 0 0 8 2.5c-1.25.55-2.39 1.3-3.37 2.24-1.29 1.3-1.9 2.5-1.84 3.64.04.55.25 1.09.6 1.53-.93 1.56-1.64 2.5-2.14 2.84C1 13 1 13 1.5 13c.25 0 .66-.4.75-.5l5.02-5.06c.15-.16.5-.32.77-.06.25.24.13.57 0 .71l-2.5 2.6a.13.13 0 0 0 .05.2c.92.26 2.59-.09 3.96-1.4 2.93-2.84 3.41-7.99 3.45-8.2a.23.23 0 0 0-.08-.21Z" fill-rule="nonzero"></path></svg> </span> <span class="label _sr-only">Draft entry</span> </span></template> <template id="share-policy-icon-anyone"><span class="policy-icon -share -anyone -circle" data-policy-code="anyone" data-policy-type="share"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Visible to anyone (with link)"> <svg class="glyph" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M4.385 5.061c.977-.976 2.559-.976 3.536 0l.985 1.041L7.849 7.16l-.018-.007-1.002-1.052c-.375-.372-.98-.372-1.355-.001l-.437.436c-.106.084-.201.18-.286.285L2.824 8.755a.94.94 0 0 0-.28.692.95.95 0 0 0 .282.687l.401.401a.99.99 0 0 0 1.359.006l.836-.847a3.52 3.52 0 0 0 1.385.816L5.68 11.651a2.5 2.5 0 0 1-1.771.737c-.665 0-1.302-.265-1.771-.736l-.407-.407c-.976-.977-.976-2.559 0-3.537zm5.706-3.451c.665 0 1.302.265 1.771.736l.407.407c.976.977.976 2.559 0 3.537L9.615 8.938c-.977.976-2.559.976-3.537-.001l-1.033-.995.415-.416.133-.15.15-.134.403-.405 1.024 1.059c.347.343.889.37 1.264.08l.09-.079 2.651-2.655c.153-.15.248-.347.274-.562l.007-.131a.95.95 0 0 0-.282-.687l-.401-.401a.99.99 0 0 0-1.359-.006l-.842.841c-.408-.39-.888-.663-1.395-.818L8.32 2.347a2.5 2.5 0 0 1 1.771-.737z"></path></svg> </span> <span class="label _sr-only">Visible to anyone (with link)</span> </span></template> <template id="share-policy-icon-friends"><span class="policy-icon -share -friends -circle" data-policy-code="friends" data-policy-type="share"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Visible to the member’s friends (with link)"> <svg class="glyph" fill-rule="evenodd" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M10.201 8.732l-.26-.004c1.167 0 1.885.199 2.624.493.431.172.773.378 1.009.595.289.267.426.556.426.834V12l-3.148-.001.001-1.685c0-.515-.188-1.066-.652-1.582zM9.941 3.2c.58 0 1.119.214 1.503.611.342.353.565.853.565 1.489 0 .689-.169 1.45-.545 1.992a1.78 1.78 0 0 1-1.522.815c-.645 0-1.15-.332-1.502-.845-.376-.55-.566-1.312-.566-1.992 0-.635.223-1.128.563-1.473.384-.389.923-.596 1.504-.596zM4.853 7.911c1.458 0 2.136.249 3.06.616.539.215.966.472 1.261.744.362.334.533.696.533 1.043V12H0v-1.686c0-.347.171-.709.533-1.043.294-.272.721-.529 1.261-.744.924-.368 1.601-.616 3.06-.616zm0-6.911c.724 0 1.398.268 1.878.763.427.441.706 1.066.706 1.861 0 .861-.212 1.812-.681 2.49-.426.615-1.052 1.019-1.903 1.019-.806 0-1.438-.414-1.877-1.057-.47-.688-.707-1.64-.707-2.49 0-.794.278-1.41.704-1.841C3.452 1.259 4.126 1 4.853 1z"></path></svg> </span> <span class="label _sr-only">Visible to the member’s friends (with link)</span> </span></template> <template id="share-policy-icon-you"><span class="policy-icon -share -you -circle" data-policy-code="you" data-policy-type="share"><span class="frame tooltip" data-js-trigger="tooltip" data-original-title="Only visible to you"> <svg class="glyph" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 1a3.5 3.5 0 0 1 3.5 3.5V5A1.5 1.5 0 0 1 12 6.5v5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 2 11.5v-5A1.5 1.5 0 0 1 3.5 5v-.5A3.5 3.5 0 0 1 7 1zm0 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2zm0-5.5a2 2 0 0 0-2 2V5h4v-.5a2 2 0 0 0-1.851-1.995L7 2.5z" fill-rule="evenodd"></path></svg> </span> <span class="label _sr-only">Only visible to you</span> </span></template>
+<form action="/search/" autocorrect="off" class="js-search-form search-form" id="search" method="get">
+<input autocomplete="false" name="hidden" style="display:none;" type="text"/>
+<fieldset>
+<label class="hidden" for="search-q">Search:</label>
+<input class="field -borderless" data-lpignore="true" id="search-q" inputmode="search" name="q" type="text" value=""/>
+<input class="action" type="submit" value="Search"/>
+</fieldset>
+</form>
+</section>
+</header>
+<div class="site-body" id="content">
+<div class="content-wrap">
+<section class="section col-24 col-main">
+<div id="content-nav"> <h2 class="section-heading">Films</h2> <div class="sorting-selects has-hide-toggle"> <section class="grid-toggle-menu mob-hide"> <ul> <li class="selected"><a class="grid-toggle ir s grid-toggle-small" data-toggle="large" href="/films/popular/genre/action/">Small</a></li> <li><a class="grid-toggle ir s grid-toggle-large" data-toggle="small" href="/films/popular/genre/action/size/large/">Large</a></li> </ul> </section> <section class="smenu-wrapper hide-toggle-menu"> <div class="smenu"> <label><span class="ir s hide-toggle-icon">Visibility Filters</span><i class="ir s icon"></i></label> <ul class="smenu-menu" id="hide-toggle-menu"> <li class="divider-line-below"><a class="item js-film-filter-remover" href="#">Remove filters</a></li> <li class="js-account-filters"> <label class="option-label -toggle -small switch-control js-fade-toggle"> <span class="label">Fade watched films</span> <input checked="checked" class="checkbox" role="switch" type="checkbox"/><span class="state"><span class="track"><span class="handle"></span></span></span> </label> </li> <li class="js-account-filters"> <label class="option-label -toggle -small switch-control js-custom-poster-toggle" data-action="/ajax/poster-mode/"> <span class="label">Show custom posters</span> <input checked="checked" class="checkbox" role="switch" type="checkbox"/><span class="state"><span class="track"><span class="handle"></span></span></span> </label> </li> <li class="divider-line js-account-filters"> <span class="smenu-sublabel -uppercase">Custom posters</span> <div aria-label="Change custom poster visibility" class="segmented-control -small custom-poster-control js-custom-poster-control" data-action="/ajax/poster-mode/" role="group"> <div class="options"> <button class="option" data-js-trigger="option" data-value="All" type="button">Any</button> <button class="option" data-js-trigger="option" data-value="Theirs" type="button">Theirs</button> <button class="option" data-js-trigger="option" data-value="Yours" type="button">Yours</button> <button class="option" data-js-trigger="option" data-value="None" type="button">None</button> </div> </div> </li> <li class="divider-line js-account-filters"> <span class="smenu-sublabel -uppercase">Account Filters</span> <ul> <li class="js-film-filter" data-category="watched" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show watched films</a></li> <li class="js-film-filter" data-category="watched" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide watched films</a></li> <li class="js-film-filter divider-line -inset" data-category="liked" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show liked films</a></li> <li class="js-film-filter" data-category="liked" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide liked films</a></li> <li class="js-film-filter divider-line -inset" data-category="rated" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show rated films</a></li> <li class="js-film-filter" data-category="rated" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide rated films</a></li> <li class="js-film-filter divider-line -inset" data-category="logged" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show logged films</a></li> <li class="js-film-filter" data-category="logged" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide logged films</a></li> <li class="js-film-filter divider-line -inset" data-category="rewatched" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show rewatched films</a></li> <li class="js-film-filter" data-category="rewatched" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide rewatched films</a></li> <li class="js-film-filter divider-line -inset" data-category="reviewed" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show reviewed films</a></li> <li class="js-film-filter" data-category="reviewed" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide reviewed films</a></li> <li class="js-film-filter divider-line -inset" data-category="watchlisted" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show films in watchlist</a></li> <li class="js-film-filter" data-category="watchlisted" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide films in watchlist</a></li> <li class="js-film-filter divider-line -inset" data-category="owned" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show films you own</a></li> <li class="js-film-filter" data-category="owned" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide films you own</a></li> <li class="js-film-filter divider-line -inset" data-category="customised" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show films with your custom posters</a></li> <li class="js-film-filter" data-category="customised" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide films with your custom posters</a></li> <li class="js-film-filter divider-line -inset" data-category="customisedbackdrop" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show films with your custom backdrops</a></li> <li class="js-film-filter" data-category="customisedbackdrop" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide films with your custom backdrops</a></li> </ul> </li> <li class="divider-line js-film-filters"> <span class="smenu-sublabel -uppercase">Content Filters</span> <ul> <li class="js-film-filter" data-category="shorts" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show short films</a></li> <li class="js-film-filter" data-category="shorts" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide short films</a></li> <li class="js-film-filter divider-line -inset" data-category="tv" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show TV shows</a></li> <li class="js-film-filter" data-category="tv" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide TV shows</a></li> <li class="js-film-filter divider-line -inset" data-category="docs" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide documentaries</a></li> <li class="js-film-filter divider-line -inset" data-category="unreleased" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide unreleased titles</a></li> <li class="js-film-filter divider-line -inset" data-category="obscure" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show obscure films</a></li> <li class="js-film-filter" data-category="obscure" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide obscure films</a></li> <li class="js-film-filter divider-line -inset" data-category="backdropped" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show films with backdrop</a></li> <li class="js-film-filter" data-category="backdropped" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide films with backdrop</a></li> <li class="js-film-filter divider-line -inset" data-category="nanocrowd" data-type="show"><a class="item" href="#"><i class="ir s icon"></i>Show Nanocrowd films</a></li> <li class="js-film-filter" data-category="nanocrowd" data-type="hide"><a class="item" href="#"><i class="ir s icon"></i>Hide Nanocrowd films</a></li> </ul> </li> </ul> </div> </section> <section class="smenu-wrapper"> <strong class="smenu-label">Sort by</strong> <div class="smenu"> <label>Film Popularity<i class="ir s icon"></i></label> <ul class="smenu-menu"> <li class=""><a class="item" href="/films/genre/action/by/name/size/small/">Film Name</a></li> <li class=""><span class="smenu-sublabel">Release Date</span> <ul> <li class=""><a class="item" href="/films/genre/action/by/release/size/small/">Newest First</a></li> <li class=""><a class="item" href="/films/genre/action/by/release-earliest/size/small/">Earliest First</a></li> </ul></li> <li class=""><span class="smenu-sublabel">Average Rating</span> <ul> <li class=""><a class="item" href="/films/genre/action/by/rating/size/small/">Highest First</a></li> <li class=""><a class="item" href="/films/genre/action/by/rating-lowest/size/small/">Lowest First</a></li> </ul></li> <li class="show-when-logged-in"><span class="smenu-sublabel">Your Rating</span> <ul> <li class="show-when-logged-in"><a class="item" href="/films/genre/action/by/your-rating/size/small/">Highest First</a></li> <li class="show-when-logged-in"><a class="item" href="/films/genre/action/by/your-rating-lowest/size/small/">Lowest First</a></li> </ul></li> <li class="show-when-logged-in"><span class="smenu-sublabel">Your Interests</span> <ul> <li class="show-when-logged-in"><a class="item" href="/films/genre/action/by/your-interest-liked/size/small/">Based on films you liked</a></li> <li class="show-when-logged-in"><a class="item" href="/films/genre/action/by/your-interest-related/size/small/">Related to films you liked</a></li> </ul></li> <li class=""><span class="smenu-sublabel">Film Length</span> <ul> <li class=""><a class="item" href="/films/genre/action/by/shortest/size/small/">Shortest First</a></li> <li class=""><a class="item" href="/films/genre/action/by/longest/size/small/">Longest First</a></li> </ul></li> <li class=""><span class="smenu-sublabel">Film Popularity</span> <ul> <li class="smenu-subselected"><a class="item" href="/films/popular/genre/action/size/small/"><i class="ir s icon"></i>All Time</a></li> <li class=""><a class="item" href="/films/popular/this/week/genre/action/size/small/">This Week</a></li> <li class=""><a class="item" href="/films/popular/this/month/genre/action/size/small/">This Month</a></li> <li class=""><a class="item" href="/films/popular/this/year/genre/action/size/small/">This Year</a></li> </ul></li> </ul> </div> </section>
+<section class="smenu-wrapper"> <div class="smenu"> <label>Service<i class="ir s icon"></i> </label> <ul class="smenu-menu" data-upgrade-url="/pro/" id="services-menu"> <li class="availability-amazon"> <a class="item" href="/films/popular/genre/action/on/amazon-usa/size/small/">Amazon US</a> </li> <li class="availability-amazon-video"> <a class="item" href="/films/popular/genre/action/on/amazon-video-us/size/small/">Amazon Video US</a> </li> <li class="availability-apple-tv-plus"> <a class="item" href="/films/popular/genre/action/on/apple-tv-plus-ro/size/small/">Apple TV Plus RO</a> </li> <li class="availability-apple-itunes"> <a class="item" href="/films/popular/genre/action/on/apple-itunes-rou/size/small/">Apple TV RO</a> </li> <li class="note divider-line -upgrade"> <p>Upgrade to a <a href="/pro/">Letterboxd <span class="badge -pro -small">Pro</span></a> account to add your favorite services to this list—including any service and country pair listed on JustWatch—and to enable one-click filtering by all your favorites.</p></li> <li><a class="item item-small" href="https://www.justwatch.com" rel="noopener noreferrer" target="_blank"><small>Powered by JustWatch</small></a></li> </ul> </div> </section>
+<section class="smenu-wrapper"> <div class="smenu"> <label> Action<i class="ir s icon"></i> </label> <ul class="smenu-menu"> <li><a class="item" href="/films/popular/size/small/">Any genre</a></li> <li class="divider-line"> <ul> <li class="smenu-subselected smenu-include"><a class="item" href="/films/popular/genre/-action/size/small/"><i class="ir s icon"></i>Action</a></li> <li class=""><a class="item" href="/films/popular/genre/action+adventure/size/small/"><i class="ir s icon"></i>Adventure</a></li> <li class=""><a class="item" href="/films/popular/genre/action+animation/size/small/"><i class="ir s icon"></i>Animation</a></li> <li class=""><a class="item" href="/films/popular/genre/action+comedy/size/small/"><i class="ir s icon"></i>Comedy</a></li> <li class=""><a class="item" href="/films/popular/genre/action+crime/size/small/"><i class="ir s icon"></i>Crime</a></li> <li class=""><a class="item" href="/films/popular/genre/action+documentary/size/small/"><i class="ir s icon"></i>Documentary</a></li> <li class=""><a class="item" href="/films/popular/genre/action+drama/size/small/"><i class="ir s icon"></i>Drama</a></li> <li class=""><a class="item" href="/films/popular/genre/action+family/size/small/"><i class="ir s icon"></i>Family</a></li> <li class=""><a class="item" href="/films/popular/genre/action+fantasy/size/small/"><i class="ir s icon"></i>Fantasy</a></li> <li class=""><a class="item" href="/films/popular/genre/action+history/size/small/"><i class="ir s icon"></i>History</a></li> <li class=""><a class="item" href="/films/popular/genre/action+horror/size/small/"><i class="ir s icon"></i>Horror</a></li> <li class=""><a class="item" href="/films/popular/genre/action+music/size/small/"><i class="ir s icon"></i>Music</a></li> <li class=""><a class="item" href="/films/popular/genre/action+mystery/size/small/"><i class="ir s icon"></i>Mystery</a></li> <li class=""><a class="item" href="/films/popular/genre/action+romance/size/small/"><i class="ir s icon"></i>Romance</a></li> <li class=""><a class="item" href="/films/popular/genre/action+science-fiction/size/small/"><i class="ir s icon"></i>Science Fiction</a></li> <li class=""><a class="item" href="/films/popular/genre/action+thriller/size/small/"><i class="ir s icon"></i>Thriller</a></li> <li class=""><a class="item" href="/films/popular/genre/action+tv-movie/size/small/"><i class="ir s icon"></i>TV Movie</a></li> <li class=""><a class="item" href="/films/popular/genre/action+war/size/small/"><i class="ir s icon"></i>War</a></li> <li class=""><a class="item" href="/films/popular/genre/action+western/size/small/"><i class="ir s icon"></i>Western</a></li> </ul> </li> </ul> </div> </section> <section class="smenu-wrapper"> <div class="smenu"> <label class="x"> Decade<i class="ir s icon"></i> </label> <ul class="smenu-menu"> <li class="smenu-subselected"><span class="selected">Any decade</span></li> <li class="divider-line"><a class="item" href="/films/popular/upcoming/genre/action/size/small/">Upcoming</a></li> <li class=""><a class="item" href="/films/popular/decade/2020s/genre/action/size/small/">2020s</a></li> <li class=""><a class="item" href="/films/popular/decade/2010s/genre/action/size/small/">2010s</a></li> <li class=""><a class="item" href="/films/popular/decade/2000s/genre/action/size/small/">2000s</a></li> <li class=""><a class="item" href="/films/popular/decade/1990s/genre/action/size/small/">1990s</a></li> <li class=""><a class="item" href="/films/popular/decade/1980s/genre/action/size/small/">1980s</a></li> <li class=""><a class="item" href="/films/popular/decade/1970s/genre/action/size/small/">1970s</a></li> <li class=""><a class="item" href="/films/popular/decade/1960s/genre/action/size/small/">1960s</a></li> <li class=""><a class="item" href="/films/popular/decade/1950s/genre/action/size/small/">1950s</a></li> <li class=""><a class="item" href="/films/popular/decade/1940s/genre/action/size/small/">1940s</a></li> <li class=""><a class="item" href="/films/popular/decade/1930s/genre/action/size/small/">1930s</a></li> <li class=""><a class="item" href="/films/popular/decade/1920s/genre/action/size/small/">1920s</a></li> <li class=""><a class="item" href="/films/popular/decade/1910s/genre/action/size/small/">1910s</a></li> <li class=""><a class="item" href="/films/popular/decade/1900s/genre/action/size/small/">1900s</a></li> <li class=""><a class="item" href="/films/popular/decade/1890s/genre/action/size/small/">1890s</a></li> <li class=""><a class="item" href="/films/popular/decade/1880s/genre/action/size/small/">1880s</a></li> <li class=""><a class="item" href="/films/popular/decade/1870s/genre/action/size/small/">1870s</a></li> </ul> </div> </section> </div> <div class="clear"></div> </div>
+<div data-url="/films/ajax/popular/genre/action/size/small/?esiAllowFilters=true" id="films-browser-list-container"></div>
+<div class="clear"></div>
+</section>
+</div>
+</div>
+<footer class="page-footer js-page-footer js-hide-in-app" id="page-footer">
+<div class="content-wrap">
+<nav class="footer-nav js-footer-nav">
+<ul>
+<li><a href="/about/">About</a></li>
+<li class="js-hide-in-app"><a href="/pro/">Pro</a></li>
+<li><a href="/journal/">News</a></li>
+<li><a href="/apps/">Apps</a></li>
+<li><a href="https://apple.co/3TfzHVG" rel="noopener noreferrer" target="_blank">Podcast</a></li>
+<li><a href="/year-in-review/">Year in Review</a></li>
+<li><a href="/gift-guide/">Gifts</a></li>
+<li><a href="/welcome/">Help</a></li>
+<li><a href="/legal/terms-of-use/">Terms</a></li>
+<li><a href="/api-beta/">API</a></li>
+<li><a href="/contact/">Contact</a></li>
+</ul>
+</nav>
+<div class="socials">
+<nav class="social-service-list -inline">
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://www.instagram.com/letterboxd" rel="noopener noreferrer" target="_blank" title="Letterboxd on Instagram">
+<svg aria-hidden="true" class="glyph" height="20" role="presentation" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.12.06c1.07.05 1.8.22 2.43.46.66.26 1.21.6 1.77 1.16.56.55.9 1.11 1.15 1.77.25.63.42 1.36.47 2.43.04.94.06 1.32.06 3.3v1.37c0 1.54 0 2.19-.03 2.77v.22l-.03.58a7.34 7.34 0 0 1-.47 2.43 4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.16c-.64.24-1.36.41-2.43.46l-.61.03h-.23c-.5.02-1.06.03-2.21.03H9.2c-2 0-2.37-.02-3.32-.06a7.34 7.34 0 0 1-2.43-.46 4.9 4.9 0 0 1-1.77-1.16 4.9 4.9 0 0 1-1.16-1.77 7.34 7.34 0 0 1-.46-2.43l-.03-.61v-.2A60.9 60.9 0 0 1 0 11.5V8.75C0 7.7.01 7.17.03 6.7v-.2l.03-.61C.1 4.8.28 4.08.52 3.45a4.9 4.9 0 0 1 1.16-1.77A4.9 4.9 0 0 1 3.45.52 7.34 7.34 0 0 1 5.88.06l.61-.03h.2C7.12 0 7.6 0 8.5 0h2.74c1.62 0 2 .02 2.88.06ZM11.02 2H8.97c-1.7 0-2.05.02-2.92.06a5.4 5.4 0 0 0-1.82.33c-.45.18-.78.39-1.12.73-.34.34-.55.67-.73 1.12-.13.35-.3.86-.33 1.82C2.02 6.93 2 7.29 2 8.98v2.04c0 1.7.02 2.05.06 2.92.04.95.2 1.47.33 1.81.18.46.39.78.73 1.13.34.34.67.55 1.12.73.35.13.86.29 1.82.33.83.04 1.2.05 2.7.06h2.47c1.51 0 1.87-.02 2.71-.06a5.4 5.4 0 0 0 1.81-.33c.46-.18.78-.4 1.12-.73.35-.35.56-.67.73-1.13.14-.34.3-.86.34-1.8a49 49 0 0 0 .06-2.72V8.77a49 49 0 0 0-.06-2.71 5.4 5.4 0 0 0-.34-1.82 3.02 3.02 0 0 0-.73-1.12 3.02 3.02 0 0 0-1.12-.73 5.4 5.4 0 0 0-1.81-.33c-.88-.04-1.23-.06-2.93-.06ZM10 4.86a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.25-3.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"></path></svg>
+<span class="label">Instagram</span>
+</a>
+</div>
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://www.threads.net/@letterboxd" rel="noopener noreferrer" target="_blank" title="Letterboxd on Threads">
+<svg aria-hidden="true" class="glyph" height="18" role="presentation" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8.1 0c2.8 0 4.9.9 6.3 2.6.7.9 1.3 1.9 1.6 3v.1l-1.6.4c-.3-1-.7-1.8-1.3-2.4-1.1-1.3-2.8-2-5-2-2.1 0-3.8.7-4.9 2-1 1.2-1.5 3-1.5 5.3s.5 4 1.5 5.3c1.1 1.3 2.8 2 5 2 1.9 0 3.2-.4 4.3-1.5 1-1 1.3-2.4.8-3.5-.2-.5-.6-1-1.1-1.2-.2 1-.5 1.7-1 2.3-.7.8-1.6 1.3-2.8 1.3-1 .1-1.8-.1-2.5-.6A2.8 2.8 0 0 1 4.5 11C4.5 9 6 7.8 8.2 7.6l2.3.1c-.1-.5-.3-.9-.6-1.2-.4-.4-1-.6-1.7-.7-.9 0-1.6.3-2 1H6L4.7 6a4 4 0 0 1 3.5-1.7c2.3 0 3.8 1.4 4 3.8v.2h.2v.1c1.2.5 2 1.3 2.4 2.3.8 1.7.5 3.8-1.1 5.4A7.4 7.4 0 0 1 8 18c-2.7 0-4.8-1-6.2-2.6A10 10 0 0 1 0 9c0-2.7.7-4.8 2-6.4C3.2 1 5.3 0 8 0ZM9 9.3h-.6c-1.4 0-2.1.7-2 1.5 0 .8.9 1.3 2 1.3.6 0 1-.2 1.4-.5.4-.4.7-1 .8-2v-.2A8 8 0 0 0 9 9.3h-.1Z" fill-rule="nonzero"></path></svg>
+<span class="label">Threads</span>
+</a>
+</div>
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://x.com/letterboxd" rel="noopener noreferrer" target="_blank" title="Letterboxd on X">
+<svg aria-hidden="true" class="glyph" height="17" role="presentation" width="17" xmlns="http://www.w3.org/2000/svg"><path d="m5.4 0 4 6 5-6h2.1l-.3.4-5.9 6.8 6.5 9.5.2.3h-5.3l-4.3-6.3L2 16.9 2 17H0l.3-.4 6.2-7.2L.3.4 0 0h5.3Zm-1 1.5H2.9l4.9 7 .6.9 4.3 6.1h1.6l-5-7.3-.7-.9-4-5.8Z" fill-rule="nonzero"></path></svg>
+<span class="label">X</span>
+</a>
+</div>
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://bsky.app/profile/letterboxd.social" rel="noopener noreferrer" target="_blank" title="Letterboxd on Bluesky">
+<svg aria-hidden="true" class="glyph" height="17" role="presentation" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M4.15 1.14C6.34 2.81 8.7 6.18 9.56 7.98c.87-1.8 3.23-5.17 5.42-6.84 1.58-1.2 4.14-2.12 4.14.83 0 .59-.33 4.95-.53 5.66-.68 2.46-3.17 3.1-5.38 2.71 3.87.67 4.85 2.87 2.73 5.07-4.04 4.18-5.8-1.05-6.26-2.39-.08-.25-.12-.36-.12-.26 0-.1-.04.01-.12.26-.45 1.34-2.22 6.57-6.25 2.39-2.13-2.2-1.14-4.4 2.72-5.07-2.2.38-4.7-.25-5.38-2.7C.33 6.91 0 2.55 0 1.96 0-.98 2.56-.05 4.15 1.14Z" fill="#000" fill-rule="nonzero"></path></svg>
+<span class="label">Bluesky</span>
+</a>
+</div>
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://www.facebook.com/letterboxd" rel="noopener noreferrer" target="_blank" title="Letterboxd on Facebook">
+<svg aria-hidden="true" class="glyph" height="19" role="presentation" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 0a9.5 9.5 0 0 0-1.48 18.89V12H5.6V9.25h2.42V7.41c0-2.38 1.41-3.7 3.58-3.7 1.04 0 2.13.19 2.13.19v2.33h-1.2c-1.18 0-1.54.74-1.54 1.49v1.53h2.63L13.2 12h-2.21v6.89A9.5 9.5 0 0 0 9.5 0Z"></path></svg>
+<span class="label">Facebook</span>
+</a>
+</div>
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://www.tiktok.com/@letterboxd" rel="noopener noreferrer" target="_blank" title="Letterboxd on TikTok">
+<svg aria-hidden="true" class="glyph" height="18" role="presentation" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M16.48 4.32a4.62 4.62 0 0 1-3.92-2.66A4.04 4.04 0 0 1 12.23 0H9.07v11.85c0 1.93-1.19 3.07-2.65 3.07a2.71 2.71 0 0 1-2.04-.9 2.57 2.57 0 0 1-.6-2.1 2.55 2.55 0 0 1 1.26-1.81 2.7 2.7 0 0 1 2.24-.21V6.77a5.92 5.92 0 0 0-4.08.86 5.7 5.7 0 0 0-2.15 2.55 5.53 5.53 0 0 0 1.26 6.16 5.86 5.86 0 0 0 6.33 1.23 5.78 5.78 0 0 0 2.6-2.08c.64-.94.98-2.03.98-3.15V5.96a7.74 7.74 0 0 0 4.25 1.25V4.32Z"></path></svg>
+<span class="label">TikTok</span>
+</a>
+</div>
+<div class="listitem -icononly">
+<a class="trigger tooltip" href="https://www.youtube.com/letterboxdhq" rel="noopener noreferrer" target="_blank" title="Letterboxd on YouTube">
+<svg aria-hidden="true" class="glyph" height="16" role="presentation" width="23" xmlns="http://www.w3.org/2000/svg"><path d="M11.74 0c.61 0 2.33.02 4.11.08l.54.02c1.7.06 3.35.18 4.1.38a2.87 2.87 0 0 1 2.03 2.02c.45 1.67.48 5.04.48 5.46v.08c0 .42-.03 3.8-.48 5.46a2.87 2.87 0 0 1-2.03 2.02c-.75.2-2.4.32-4.1.38l-.54.02c-1.78.07-3.5.08-4.11.08H11.26c-.62 0-2.33-.01-4.11-.08l-.54-.02c-1.7-.06-3.36-.18-4.1-.38A2.87 2.87 0 0 1 .48 13.5C.04 11.9 0 8.68 0 8.1v-.2c0-.58.04-3.79.48-5.4A2.87 2.87 0 0 1 2.5.48c.74-.2 2.4-.32 4.1-.38l.54-.02C8.93.02 10.65 0 11.26 0ZM9 4.57v6.86L15 8 9 4.57Z"></path></svg>
+<span class="label">YouTube</span>
+</a>
+</div>
+</nav>
+</div>
+<p class="copyright">
+				© Letterboxd Limited. Made by <a class="mute" href="/crew/">fans</a> in Aotearoa New Zealand.
+				<span class="nobr"><a class="mute" href="https://letterboxd.com/about/film-data/">Film data</a> from <a class="mute" href="https://www.themoviedb.org">TMDB</a>. 
+				
+						<a class="mute mobile-site-switch" data-use-mobile-site="yes" href="#">Mobile site</a>.
+					
+	</span>
+<span class="recap" style="display:none"><br/>This site is protected by reCAPTCHA and the Google <a class="mute" href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">privacy policy</a> and <a class="mute" href="https://policies.google.com/terms" rel="noopener noreferrer" target="_blank">terms of service</a> apply.</span>
+</p>
+</div>
+</footer>
+<div aria-hidden="true" aria-labelledby="poster-picker-modal-title" class="modal fade content-media-picker-modal poster-picker-modal" data-bs-backdrop="static" id="poster-picker-modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg modal-fullscreen-sm-down modal-dialog-centered modal-dialog-scrollable">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="poster-picker-modal-title">Select your preferred <span class="js-image-type">poster</span></h5>
+<button aria-label="Close" class="modal-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<form action="" data-js-target="poster-picker" data-poster-picker-options='{"id": "714c47ea-f692-4b31-a6f1-83b879ffd66d"}' id="poster-picker-714c47ea-f692-4b31-a6f1-83b879ffd66d" method="post" novalidate="novalidate"></form>
+</div>
+<div class="modal-footer">
+<div class="content-media-picker-note" hidden=""></div>
+<div class="content-media-picker-controls poster-picker-controls" data-poster-picker-controls-for="poster-picker-714c47ea-f692-4b31-a6f1-83b879ffd66d"> <div class="modal-action-group -center"> <button class="button -destructive" data-js-trigger="reset" disabled="" form="poster-picker-714c47ea-f692-4b31-a6f1-83b879ffd66d" type="button"> <span class="label" data-js-label-for="film">Reset <span class="js-image-type">poster</span></span> <span class="label" data-js-label-for="object" hidden="">Reset for <span class="js-object-name">item</span></span> </button> <button class="button -action" data-js-trigger="submit" disabled="" form="poster-picker-714c47ea-f692-4b31-a6f1-83b879ffd66d" type="submit"> <span class="label" data-js-label-for="film">Save<span class="mob-hide"> changes</span></span> <span class="label" data-js-label-for="object" hidden="">Save<span class="mob-hide"> for <span class="js-object-name">item</span></span></span> </button> </div> <div aria-hidden="true" class="objectonly js-objectonly" hidden=""> <label class="option-label -checkbox -medium -reversed" for="poster-picker-frm-object-only"> <input class="checkbox" data-js-trigger="object-only" disabled="" id="poster-picker-frm-object-only" type="checkbox" value="true"/><i class="substitute"></i>This <span class="js-object-name">item</span> only </label> </div> </div>
+</div>
+</div>
+</div>
+</div>
+<div aria-hidden="true" aria-labelledby="backdrop-picker-modal-title" class="modal fade content-media-picker-modal backdrop-picker-modal" data-bs-backdrop="static" id="backdrop-picker-modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg modal-fullscreen-sm-down modal-dialog-centered modal-dialog-scrollable">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="backdrop-picker-modal-title">Select your preferred backdrop</h5>
+<button aria-label="Close" class="modal-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<form action="" data-backdrop-picker-options='{"id": "e1981656-43e4-4e16-a004-0164f6e8604f"}' data-js-target="backdrop-picker" id="backdrop-picker-e1981656-43e4-4e16-a004-0164f6e8604f" method="post" novalidate="novalidate"></form>
+</div>
+<div class="modal-footer">
+<div class="content-media-picker-note" hidden=""></div>
+<div class="content-media-picker-controls backdrop-picker-controls" data-backdrop-picker-controls-for="backdrop-picker-e1981656-43e4-4e16-a004-0164f6e8604f"> <div class="modal-action-group -center"> <button class="button -destructive" data-js-trigger="reset" disabled="" form="backdrop-picker-e1981656-43e4-4e16-a004-0164f6e8604f" type="button"> <span class="label" data-js-label-for="film">Reset <span class="js-image-type">poster</span></span> <span class="label" data-js-label-for="object" hidden="">Reset for <span class="js-object-name">item</span></span> </button> <button class="button -action" data-js-trigger="submit" disabled="" form="backdrop-picker-e1981656-43e4-4e16-a004-0164f6e8604f" type="submit"> <span class="label" data-js-label-for="film">Save<span class="mob-hide"> changes</span></span> <span class="label" data-js-label-for="object" hidden="">Save<span class="mob-hide"> for <span class="js-object-name">item</span></span></span> </button> </div> <div aria-hidden="true" class="objectonly js-objectonly" hidden=""> <label class="option-label -checkbox -medium -reversed" for="backdrop-picker-frm-object-only"> <input class="checkbox" data-js-trigger="object-only" disabled="" id="backdrop-picker-frm-object-only" type="checkbox" value="true"/><i class="substitute"></i>This <span class="js-object-name">item</span> only </label> </div> </div>
+</div>
+</div>
+</div>
+</div>
+<div aria-hidden="true" aria-labelledby="remove-ads-modal-title" class="modal fade modal-upgrade-message" id="remove-ads-modal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="remove-ads-modal-title">Upgrade to remove ads</h5>
+<button aria-label="Close" class="modal-close modal-close-white" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<div class="body-text -hero">
+<p>Letterboxd is an independent service created by a small team, and we rely mostly on the support of our members to maintain our site and apps. Please consider upgrading to a <a href="/pro/">Pro account</a>—for less than a couple bucks a month, you’ll get cool additional features like all-time and annual stats pages (<a href="https://letterboxd.com/jack/stats/">example</a>), the ability to select (and filter by) your favorite streaming services, and no ads!</p>
+</div>
+</div>
+<div class="modal-footer">
+<a class="button -action button-action" href="/pro/">Learn more about Pro</a>
+</div>
+</div>
+</div>
+</div>
+<script crossorigin="" src="https://s.ltrbxd.com/static/js/es/partner-publishers-CKpiqzta.js" type="module"></script>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/B5Qt9EMX.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/Duz0x7wZ.js" rel="modulepreload"/>
+<link crossorigin="" href="https://s.ltrbxd.com/static/js/es/chunks/BBVjT85o.js" rel="modulepreload"/>
+<script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+<script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+<script nomodule="">!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+<script crossorigin="" id="vite-legacy-polyfill" nomodule="" src="https://s.ltrbxd.com/static/js/iife/polyfills-legacy-z1Gu-FdY.js"></script>
+<script crossorigin="" data-src="https://s.ltrbxd.com/static/js/system/partner-publishers-legacy-DHaz-sKu.js" id="vite-legacy-entry" nomodule="">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+</html>

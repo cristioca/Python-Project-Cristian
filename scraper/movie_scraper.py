@@ -1,13 +1,19 @@
-import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import pandas as pd
-import os
 import time
+import os
 import random
+import requests
+from urllib.parse import urlparse
 
 def scrape_movies():
     """
-    Scrape movie data from Letterboxd and save to CSV file
+    Scrape movie data from Letterboxd using Selenium and save to CSV file
     """
     # Create data directory if it doesn't exist
     os.makedirs('data', exist_ok=True)
@@ -16,10 +22,15 @@ def scrape_movies():
     genres = ['action', 'drama', 'comedy', 'thriller']
     movie_data = []
     
-    # User agent to mimic a browser
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    }
+    # Set up Chrome options
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run in headless mode (no browser UI)
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    
+    # Initialize the driver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     
     try:
         # Loop through each genre
@@ -28,60 +39,126 @@ def scrape_movies():
             url = f"https://letterboxd.com/films/genre/{genre}/size/small/"
             
             print(f"Scraping {genre} movies from Letterboxd...")
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
+            driver.get(url)
             
-            # Parse HTML content
-            soup = BeautifulSoup(response.text, 'html.parser')
+            # Wait for the page to load completely
+            time.sleep(3)
+            
+            # Get the page source after JavaScript has executed
+            html_content = driver.page_source
+            
+            # Parse with BeautifulSoup
+            soup = BeautifulSoup(html_content, 'html.parser')
             
             # Find movie containers (poster items)
-            movie_containers = soup.find_all('div', class_='film-poster')
+            movie_containers = soup.find_all('li', class_='poster-container')
+
+            print(f"Found {len(movie_containers)} movie containers for {genre}")
+
             
-            print("length = ",len(movie_containers))
             # Limit to 10 movies per genre to avoid overloading
             for container in movie_containers[:10]:
-                
                 try:
-                    # Get movie details page URL
-                    film_link = container.find('a')
-                    if not film_link or not film_link.get('href'):
+                    # Find the film poster div inside the container
+                    poster_div = container.find('div', class_='film-poster')
+                    if not poster_div:
                         continue
                         
-                    # Extract movie ID and title from data attributes
-                    title = container.get('data-film-name', "Unknown")
-                    year = container.get('data-film-release-year', "Unknown")
+                    # Extract title from data attributes
+                    title = poster_div.get('data-film-name', "Unknown")
                     
-                    # Get rating if available
-                    rating_element = container.find('span', class_='rating')
-                    rating = float(rating_element.text) if rating_element else 0.0
+                    # Find the inner div with the frame that contains year info
+                    frame_link = poster_div.find('a', class_='frame')
+                    if not frame_link:
+                        continue
+                        
+                    # Extract year from frame title (format: "Movie Title (YYYY)")
+                    frame_title = frame_link.find('span', class_='frame-title')
+                    year = "Unknown"
+                    if frame_title and '(' in frame_title.text and ')' in frame_title.text:
+                        year = frame_title.text.split('(')[-1].split(')')[0]
                     
-                    # Visit the movie's page to get more details
+                    # Get rating from data-original-title attribute (format: "Movie Title (YYYY) X.XX")
+                    rating = 0.0
+                    if frame_link.get('data-original-title'):
+                        rating_text = frame_link.get('data-original-title')
+                        if rating_text and rating_text.split(')')[-1].strip():
+                            try:
+                                rating = float(rating_text.split(')')[-1].strip())
+                            except:
+                                pass
+                    
+                    # Get image URL for poster
+                    img_tag = poster_div.find('img')
+                    image_url = img_tag.get('src') if img_tag else None
+                    
+                    # Get movie details page URL
+                    film_link = poster_div.find('a')
+                    if not film_link or not film_link.get('href'):
+                        continue
+                    
+                    # ------ New scrape for more details -------
+
                     film_url = f"https://letterboxd.com{film_link.get('href')}"
                     
                     # Add a small delay to avoid rate limiting
                     time.sleep(random.uniform(1, 2))
                     
-                    film_response = requests.get(film_url, headers=headers)
-                    if film_response.status_code == 200:
-                        film_soup = BeautifulSoup(film_response.text, 'html.parser')
-                        
-                        # Get description
-                        description_element = film_soup.find('div', class_='film-text-content')
-                        description = description_element.text.strip() if description_element else "No description available"
-                        
-                        # Get more accurate genre information
-                        genre_elements = film_soup.select('div.text-sluglist a')
-                        film_genres = ", ".join([g.text for g in genre_elements]) if genre_elements else genre
-                        
-                        # Add to movie data list
-                        movie_data.append({
-                            'title': title,
-                            'year': year,
-                            'rating': rating,
-                            'genre': film_genres,
-                            'description': description
-                        })
-                        print(f"Scraped: {title} ({year})")
+                    driver.get(film_url)
+                    time.sleep(3)  # Wait for page to load
+                    
+                    film_soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    
+                    # Get description - look for the film summary
+                    description_element = film_soup.find('div', class_='film-text-content')
+                    description = "No description available"
+                    if description_element:
+                        p_element = description_element.find('p')
+                        if p_element:
+                            description = p_element.text.strip()
+                    
+                    # Get genre information - look for genres specifically
+                    genre_elements = film_soup.select('div.text-sluglist.capitalize a[href*="/films/genre/"]')
+                    film_genres = ", ".join([g.text for g in genre_elements]) if genre_elements else genre
+                    
+                    # Create images directory if it doesn't exist
+                    os.makedirs('data/images', exist_ok=True)
+                    
+                    # Download image if URL exists
+                    image_path = None
+                    if image_url:
+                        try:
+                            import requests
+                            from urllib.parse import urlparse
+                            
+                            # Create a safe filename from the movie title
+                            safe_title = "".join([c if c.isalnum() else "_" for c in title])
+                            image_filename = f"{safe_title}_{year}.jpg"
+                            image_path = f"data/images/{image_filename}"
+                            
+                            # Download the image
+                            img_response = requests.get(image_url, stream=True)
+                            if img_response.status_code == 200:
+                                with open(image_path, 'wb') as img_file:
+                                    for chunk in img_response.iter_content(1024):
+                                        img_file.write(chunk)
+                                print(f"Downloaded image for {title}")
+                            else:
+                                image_path = None
+                        except Exception as img_err:
+                            print(f"Error downloading image: {img_err}")
+                            image_path = None
+                    
+                    # Add to movie data list
+                    movie_data.append({
+                        'title': title,
+                        'year': year,
+                        'rating': rating,
+                        'genre': film_genres,
+                        'description': description,
+                        'image_path': image_path
+                    })
+                    print(f"Scraped: {title} ({year})")
                     
                 except Exception as e:
                     print(f"Error extracting movie data: {e}")
@@ -101,16 +178,15 @@ def scrape_movies():
             create_sample_dataset()
             return False
     
-    except requests.exceptions.RequestException as e:
-        print(f"Error making request: {e}")
-        # Create a sample dataset if scraping fails
-        create_sample_dataset()
-        return False
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(f"Error: {e}")
         # Create a sample dataset if scraping fails
         create_sample_dataset()
         return False
+    
+    finally:
+        # Always close the driver
+        driver.quit()
 
 def create_sample_dataset():
     """Create a sample dataset if web scraping fails"""
