@@ -9,6 +9,18 @@
     <div class="container">
         <h1>Movie Recommendation Bot</h1>
         
+        <div class="database-status">
+    <h3>Database Status</h3>
+    {% if db_status %}
+        <p>Status: <span class="status-{{ db_status.status.lower().replace(' ', '-') }}">{{ db_status.status }}</span></p>
+        <p>Movies in database: {{ db_status.movie_count }}</p>
+        {% if db_status.last_updated %}
+            <p>Last updated: {{ db_status.last_updated }}</p>
+        {% endif %}
+        <a href="{{ url_for('update_database') }}" class="btn update-btn">Update Database</a>
+    {% endif %}
+</div>
+
         {% if error %}
         <div class="error-message">
             {{ error }}

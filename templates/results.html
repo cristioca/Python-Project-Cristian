@@ -1,28 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Movie Recommendations - {{ genre }}</title>
+    <title>Letterboxd Movie Recommendations - {{ genre }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .movie-poster {
+            width: 70px;
+            height: 105px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 3px;
+        }
+        
+        .no-poster {
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: center;
+            border-radius: 3px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+            font-size: 0.8em;
+        }
+        
+        .movie-card {
+            display: flex;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .movie-details {
+            flex: 1;
+        }
+
+        .description-link {
+            color: #00b020;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .description-link:hover {
+            color: #008017;
+        }
+    </style>
+    <script>
+        function loadDescription(movieUrl, element) {
+            if (element.textContent !== 'Click for description') {
+                return;  // Description already loaded
+            }
+            
+            fetch('/movie' + movieUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.description) {
+                        element.textContent = data.description;
+                        element.style.cursor = 'default';
+                        element.style.textDecoration = 'none';
+                        element.style.color = 'inherit';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    element.textContent = 'Error loading description';
+                });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Top Recommendations for {{ genre }}</h1>
+        <h1>Letterboxd Top Recommendations for {{ genre }}</h1>
         
         {% for movie in recommendations %}
         <div class="movie-card">
             <div class="movie-poster">
-                {% if movie.poster_url %}
-                <img src="{{ movie.poster_url }}" alt="{{ movie.title }} poster">
+                {% if movie.image_path and movie.image_path.strip() %}
+                <img src="{{ url_for('static', filename=movie.image_path) }}" alt="{{ movie.title }} poster" onerror="this.parentElement.innerHTML='<div class=\'no-poster\'>No Poster Available</div>'">
                 {% else %}
-                <div class="no-poster">No Poster</div>
+                <div class="no-poster">No Poster Available</div>
                 {% endif %}
             </div>
             <div class="movie-details">
                 <h2 class="movie-title">{{ movie.title }} ({{ movie.year }})</h2>
                 <div class="movie-rating">Rating: {{ movie.rating }}/10</div>
                 <div class="movie-genre">{{ movie.genre }}</div>
-                <p class="movie-description">{{ movie.description }}</p>
+                <p class="movie-description description-link" onclick="loadDescription('{{ movie.movie_url }}', this)">{{ movie.description }}</p>
             </div>
         </div>
         {% endfor %}

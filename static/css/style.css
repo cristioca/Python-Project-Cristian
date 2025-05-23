@@ -253,3 +253,30 @@ output {
         margin: 0 auto 15px;
     }
 }
+
+
+.database-status {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.database-status h3 {
+    margin-top: 0;
+}
+
+.status-ready {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-error, .status-failed-to-update {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status-empty, .status-not-initialized {
+    color: #ffc107;
+    font-weight: bold;
+}

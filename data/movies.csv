@@ -1,1 +1,9 @@
-title,year,rating,genre,description
+title,year,rating,genre,description,image_path
+Everything Everywhere All at Once,2022,4.27,"Science Fiction, Adventure, Comedy, Action",No description available,images/Everything_Everywhere_All_at_Once_2022.jpg
+Spider-Man: Into the Spider-Verse,2018,4.41,"Adventure, Animation, Action, Science Fiction",No description available,images/Spider_Man__Into_the_Spider_Verse_2018.jpg
+Parasite,2019,4.54,"Thriller, Comedy, Drama",No description available,images/Parasite_2019.jpg
+Interstellar,2014,4.42,"Science Fiction, Drama, Adventure",No description available,images/Interstellar_2014.jpg
+Barbie,2023,3.77,"Comedy, Adventure",No description available,images/Barbie_2023.jpg
+Parasite,2019,4.54,"Thriller, Comedy, Drama",No description available,images/Parasite_2019.jpg
+Parasite,2019,4.54,"Thriller, Comedy, Drama",No description available,images/Parasite_2019.jpg
+Pulp Fiction,1994,4.25,"Thriller, Crime",No description available,images/Pulp_Fiction_1994.jpg
