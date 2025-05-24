@@ -33,18 +33,7 @@ function showMovieDetails(movieUrl) {
                     console.log("Received data:", data);
                     if (data.error) throw new Error(data.error);
                     
-                    // Add Letterboxd link after the title
-                    const titleElement = movieCard.querySelector('.movie-title');
-                    if (titleElement && data.letterboxd_url) {
-                        const letterboxdLink = document.createElement('a');
-                        letterboxdLink.href = data.letterboxd_url;
-                        letterboxdLink.target = '_blank';
-                        letterboxdLink.className = 'letterboxd-link';
-                        letterboxdLink.textContent = 'Letterboxd movie page';
-                        
-                        // Insert after the title
-                        titleElement.insertAdjacentElement('afterend', letterboxdLink);
-                    }
+                    // Letterboxd link is already added in the template
                     
                     // Update description - use innerHTML to render HTML formatting
                     descElement.innerHTML = data.description;

@@ -248,15 +248,20 @@ def recommend():
         # Filter by genre
         movies = df[df['genre'].str.contains(selected_genre, case=False)]
         
-        # Sort by rating (assuming you have a rating column)
-        if 'rating' in df.columns:
-            movies = movies.sort_values(by='rating', ascending=False)
+        # Deduplicate movies by URL
+        unique_movies = []
+        seen_urls = set()
         
-        # Convert genres to title case
-        movies['genre'] = movies['genre'].apply(lambda x: ', '.join(g.strip().title() for g in x.split(',')))
+        for _, movie in movies.iterrows():
+            if movie['movie_url'] not in seen_urls:
+                unique_movies.append(movie.to_dict())
+                seen_urls.add(movie['movie_url'])
+        
+        # Sort by rating
+        unique_movies = sorted(unique_movies, key=lambda x: x['rating'], reverse=True)
         
         # Get top 5 recommendations
-        recommendations = movies.head(5).to_dict('records')
+        recommendations = unique_movies[:5]
         
         return render_template('results.html', 
                               recommendations=recommendations, 
@@ -293,11 +298,20 @@ def search():
         if min_rating and min_rating.replace('.', '', 1).isdigit():
             df = df[df['rating'] >= float(min_rating)]
         
-        # Convert genres to title case
-        df['genre'] = df['genre'].apply(lambda x: ', '.join(g.strip().title() for g in x.split(',')))
+        # Deduplicate movies by URL
+        unique_movies = []
+        seen_urls = set()
         
-        # Get results
-        results = df.sort_values(by='rating', ascending=False).head(10).to_dict('records')
+        for _, movie in df.iterrows():
+            if movie['movie_url'] not in seen_urls:
+                unique_movies.append(movie.to_dict())
+                seen_urls.add(movie['movie_url'])
+        
+        # Sort by rating
+        unique_movies = sorted(unique_movies, key=lambda x: x['rating'], reverse=True)
+        
+        # Get top 10 results
+        results = unique_movies[:10]
         
         # Get all genres for the filter dropdown
         all_genres = []
@@ -315,6 +329,7 @@ def search():
                               genres=genres)
     except Exception as e:
         return render_template('index.html', error=f"Error searching: {str(e)}")
+
 
 @app.errorhandler(Exception)
 def handle_error(error):

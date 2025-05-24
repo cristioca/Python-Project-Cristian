@@ -21,6 +21,7 @@
             </div>
             <div class="movie-details">
                 <h2 class="movie-title">{{ movie.title }} ({{ movie.year }})</h2>
+                <a href="https://letterboxd.com{{ movie.movie_url }}" target="_blank" class="letterboxd-link">Letterboxd movie page</a>
                 <div class="movie-rating">Rating: {{ movie.rating }}/10</div>
                 <div class="movie-genre">{{ movie.genre }}</div>
                 <div class="movie-description-container">
