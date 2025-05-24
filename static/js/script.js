@@ -8,14 +8,16 @@ function showMovieDetails(movieUrl) {
             // Check if description is already loaded
             if (descElement.innerHTML !== 'Click Details to view description' && 
                 descElement.innerHTML !== 'Loading...' &&
-                descElement.innerHTML !== 'Error loading description') {
+                descElement.innerHTML !== 'Error loading description' &&
+                !descElement.innerHTML.includes('loading-spinner')) {
                 // Toggle the display of details
                 movieCard.classList.toggle('details-shown');
                 return;
             }
             
             detailsLink.style.display = 'none';
-            descElement.textContent = 'Loading...';
+            // Show loading spinner
+            descElement.innerHTML = '<div class="loading-spinner"></div> Loading details...';
             
             // Fix URL encoding - don't remove the leading slash
             const fetchUrl = `/movie/${encodeURIComponent(movieUrl)}`;
@@ -30,6 +32,19 @@ function showMovieDetails(movieUrl) {
                 .then(data => {
                     console.log("Received data:", data);
                     if (data.error) throw new Error(data.error);
+                    
+                    // Add Letterboxd link after the title
+                    const titleElement = movieCard.querySelector('.movie-title');
+                    if (titleElement && data.letterboxd_url) {
+                        const letterboxdLink = document.createElement('a');
+                        letterboxdLink.href = data.letterboxd_url;
+                        letterboxdLink.target = '_blank';
+                        letterboxdLink.className = 'letterboxd-link';
+                        letterboxdLink.textContent = 'Letterboxd movie page';
+                        
+                        // Insert after the title
+                        titleElement.insertAdjacentElement('afterend', letterboxdLink);
+                    }
                     
                     // Update description - use innerHTML to render HTML formatting
                     descElement.innerHTML = data.description;

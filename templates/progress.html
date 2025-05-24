@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Updating Database - Letterboxd Movie Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .progress-container {
+            margin: 30px 0;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #2c2c2c;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #1976d2;
+            width: 0%;
+            transition: width 0.5s;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            font-size: 12px;
+        }
+        .progress-status {
+            margin-top: 10px;
+            color: #bbbbbb;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start checking progress as soon as page loads
+            checkProgress();
+            setInterval(checkProgress, 1000);
+        });
+        
+        function checkProgress() {
+            fetch('/progress')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.complete) {
+                        // Redirect to home page when complete
+                        window.location.href = '/';
+                    } else {
+                        // Update progress bar
+                        const percent = Math.round(data.progress * 100);
+                        document.getElementById('progress-bar').style.width = percent + '%';
+                        document.getElementById('progress-text').textContent = percent + '%';
+                        document.getElementById('progress-status').textContent = data.status;
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Updating Database</h1>
+        
+        <div class="progress-container">
+            <h3>{{ operation }}</h3>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar">
+                    <span id="progress-text">0%</span>
+                </div>
+            </div>
+            <div id="progress-status" class="progress-status">Initializing...</div>
+        </div>
+        
+        <p>Please wait while we update the movie database. This may take a few minutes.</p>
+    </div>
+</body>
+</html>

@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Movie Recommendation Bot</h1>
+        <h1>Letterboxd Movie Recommendation Bot</h1>
         
         <div class="database-status">
     <h3>Database Status</h3>
@@ -17,6 +17,7 @@
         {% if db_status.last_updated %}
             <p>Last updated: {{ db_status.last_updated }}</p>
         {% endif %}
+        <a href="{{ url_for('quick_update') }}" class="btn quick-update-btn">Quick Update (only titles)</a>
         <a href="{{ url_for('update_database') }}" class="btn update-btn">Update Database</a>
     {% endif %}
 </div>

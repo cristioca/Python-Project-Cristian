@@ -3,18 +3,19 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
 .container {
-    width: 80%;
+    width: 100%;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 20px;
 }
 
 h1 {
-    color: #333;
+    color: #ffffff;
     margin-bottom: 20px;
 }
 
@@ -30,13 +31,15 @@ label {
 select, input[type="text"], input[type="number"] {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     border-radius: 4px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
 
 .btn {
     display: inline-block;
-    background: #333;
+    background: #2c2c2c;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -46,15 +49,15 @@ select, input[type="text"], input[type="number"] {
 }
 
 .btn:hover {
-    background: #555;
+    background: #3a3a3a;
 }
 
 .error-message {
-    color: red;
+    color: #ff6b6b;
     margin-bottom: 15px;
     padding: 10px;
-    background-color: #ffeeee;
-    border-left: 4px solid red;
+    background-color: #2c1c1c;
+    border-left: 4px solid #ff6b6b;
 }
 
 .movie-card {
@@ -62,8 +65,8 @@ select, input[type="text"], input[type="number"] {
     margin-bottom: 30px;
     padding: 15px;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .movie-poster {
@@ -93,7 +96,7 @@ select, input[type="text"], input[type="number"] {
 }
 
 .no-poster {
-    background-color: #f0f0f0;
+    background-color: #2c2c2c;
     padding: 10px;
     text-align: center;
     border-radius: 3px;
@@ -102,7 +105,7 @@ select, input[type="text"], input[type="number"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: #999;
     font-style: italic;
     font-size: 0.8em;
 }
@@ -115,22 +118,37 @@ select, input[type="text"], input[type="number"] {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 1.4em;
+    color: #ffffff;
+}
+
+.letterboxd-link {
+    display: block;
+    margin: 5px 0 10px;
+    color: #00e054;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.letterboxd-link:hover {
+    text-decoration: underline;
 }
 
 .movie-rating, .movie-genre {
     margin-bottom: 10px;
     font-size: 0.9em;
+    color: #bbbbbb;
 }
 
 .movie-description {
     font-size: 0.9em;
     line-height: 1.5;
+    color: #cccccc;
 }
 
 .back-link {
     display: inline-block;
     margin-top: 20px;
-    color: #333;
+    color: #4dabf7;
     text-decoration: none;
 }
 
@@ -150,40 +168,43 @@ select, input[type="text"], input[type="number"] {
 .search-section {
     margin-bottom: 30px;
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #1e1e1e;
     border-radius: 8px;
 }
 
 .search-input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     border-radius: 4px;
     font-size: 1em;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
 }
 
 .search-btn {
-    background-color: #4CAF50;
+    background-color: #2e7d32;
 }
 
 .search-btn:hover {
-    background-color: #45a049;
+    background-color: #388e3c;
 }
 
 .search-summary {
     margin-bottom: 20px;
     padding: 10px;
-    background-color: #f0f0f0;
+    background-color: #1e1e1e;
     border-radius: 4px;
 }
 
 .results-count {
     margin-bottom: 20px;
+    color: #bbbbbb;
 }
 
 .no-results {
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #1e1e1e;
     border-radius: 8px;
     text-align: center;
 }
@@ -191,32 +212,41 @@ select, input[type="text"], input[type="number"] {
 .database-status {
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #f0f0f0;
+    background-color: #1e1e1e;
     border-radius: 8px;
 }
 
 .status-ready {
-    color: green;
+    color: #4caf50;
 }
 
 .status-empty, .status-no-genres-found {
-    color: orange;
+    color: #ff9800;
 }
 
 .status-error-reading-data, .status-not-initialized {
-    color: red;
+    color: #f44336;
+}
+
+.quick-update-btn {
+    background-color: #00796b;
+    margin-right: 10px;
+}
+
+.quick-update-btn:hover {
+    background-color: #00897b;
 }
 
 .update-btn {
-    background-color: #2196F3;
+    background-color: #1976d2;
 }
 
 .update-btn:hover {
-    background-color: #0b7dda;
+    background-color: #1565c0;
 }
 
 .details-link {
-    color: #00b020;
+    color: #4dabf7;
     cursor: pointer;
     text-decoration: underline;
     display: inline-block;
@@ -224,5 +254,54 @@ select, input[type="text"], input[type="number"] {
 }
 
 .details-link:hover {
-    color: #008017;
+    color: #74c0fc;
+}
+
+/* Progress bar styles */
+.progress-container {
+    margin: 30px 0;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #2c2c2c;
+    border-radius: 4px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #1976d2;
+    width: 0%;
+    transition: width 0.5s;
+    text-align: center;
+    color: white;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+.progress-status {
+    margin-top: 10px;
+    color: #bbbbbb;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

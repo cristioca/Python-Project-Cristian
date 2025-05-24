@@ -1,11 +1,16 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import pandas as pd
 import os
 from scraper.movie_scraper import scrape_movies, create_sample_dataset, get_movie_description
 from datetime import datetime, timedelta
 import requests
+from traceback import format_exc
+from werkzeug.exceptions import HTTPException
+import threading
+import time
 
 app = Flask(__name__)
+app.secret_key = 'movie_bot_secret_key'  # Required for session
 
 # Ensure data directory exists
 os.makedirs('data', exist_ok=True)
@@ -15,6 +20,13 @@ os.makedirs('static/images', exist_ok=True)
 DATA_FILE = 'data/movies.csv'
 UPDATE_INTERVAL = timedelta(days=1)  # Update database every day
 
+# Global progress tracking
+progress_data = {
+    'progress': 0.0,
+    'status': 'Not started',
+    'complete': False
+}
+
 def should_update_database():
     """Check if database should be updated based on last modification time"""
     if not os.path.exists(DATA_FILE):
@@ -23,20 +35,72 @@ def should_update_database():
     last_modified = datetime.fromtimestamp(os.path.getmtime(DATA_FILE))
     return datetime.now() - last_modified > UPDATE_INTERVAL
 
+def update_progress(progress, status):
+    """Update the global progress data"""
+    global progress_data
+    progress_data['progress'] = progress
+    progress_data['status'] = status
+    
+def reset_progress():
+    """Reset progress tracking"""
+    global progress_data
+    progress_data = {
+        'progress': 0.0,
+        'status': 'Not started',
+        'complete': False
+    }
+
+def run_quick_update():
+    """Run quick update in a separate thread with progress tracking"""
+    try:
+        from scraper.movie_scraper import quick_update_titles
+        success = quick_update_titles(update_progress)
+        progress_data['complete'] = True
+        progress_data['progress'] = 1.0
+        progress_data['status'] = 'Complete' if success else 'Failed'
+    except Exception as e:
+        progress_data['status'] = f"Error: {str(e)}"
+        progress_data['complete'] = True
+
+def run_full_update():
+    """Run full update in a separate thread with progress tracking"""
+    try:
+        success = scrape_movies(update_progress)
+        progress_data['complete'] = True
+        progress_data['progress'] = 1.0
+        progress_data['status'] = 'Complete' if success else 'Failed'
+    except Exception as e:
+        progress_data['status'] = f"Error: {str(e)}"
+        progress_data['complete'] = True
+
+@app.route('/progress')
+def get_progress():
+    """Return current progress data as JSON"""
+    return jsonify(progress_data)
+
+@app.route('/quick_update')
+def quick_update():
+    """Start quick update process and show progress page"""
+    reset_progress()
+    # Start update in background thread
+    thread = threading.Thread(target=run_quick_update)
+    thread.daemon = True
+    thread.start()
+    return render_template('progress.html', operation='Quick Update (only titles)')
+
 @app.route('/update_database')
 def update_database():
-    """Manual route to update the movie database"""
-    try:
-        success = scrape_movies()
-        if success:
-            return redirect(url_for('index'))
-        return render_template('index.html', error="Failed to update database. Please make sure Chrome is installed.")
-    except Exception as e:
-        return render_template('index.html', error=f"Error updating database: {str(e)}")
+    """Start full update process and show progress page"""
+    reset_progress()
+    # Start update in background thread
+    thread = threading.Thread(target=run_full_update)
+    thread.daemon = True
+    thread.start()
+    return render_template('progress.html', operation='Full Database Update')
 
 @app.route('/movie/<path:movie_url>')
 def get_description(movie_url):
-    """Get and update movie description and image"""
+    """Get and update movie description, cast and image"""
     try:
         print(f"Received request for movie URL: /{movie_url}")
         
@@ -52,12 +116,19 @@ def get_description(movie_url):
         movie_row = df.loc[df['movie_url'] == f"/{movie_url}"]
         description = movie_row['description'].iloc[0]
         large_image_path = movie_row['large_image_path'].iloc[0] if 'large_image_path' in movie_row and not pd.isna(movie_row['large_image_path'].iloc[0]) else None
+        letterboxd_url = f"https://letterboxd.com{movie_url}"
         
         # If we don't have a proper description or large image, fetch them
         if description == "Details" or not large_image_path:
             print("Description or large image not found in database, fetching from web...")
+            
+            # Reset progress for this operation
+            reset_progress()
+            update_progress(0.1, f"Fetching details for {movie_row['title'].iloc[0]}")
+            
             # Get description and image from Letterboxd
             movie_details = get_movie_description(f"/{movie_url}")
+            update_progress(0.5, "Processing movie details")
             print(f"Movie details: {movie_details}")
             
             # Update description if needed
@@ -68,6 +139,7 @@ def get_description(movie_url):
             # Download and save larger image if available and needed
             if movie_details['large_image_url'] and not large_image_path:
                 try:
+                    update_progress(0.7, "Downloading movie image")
                     movie_title = df.loc[df['movie_url'] == f"/{movie_url}", 'title'].iloc[0]
                     movie_year = df.loc[df['movie_url'] == f"/{movie_url}", 'year'].iloc[0]
                     safe_title = "".join([c if c.isalnum() else "_" for c in movie_title])
@@ -95,13 +167,20 @@ def get_description(movie_url):
                 df.loc[df['movie_url'] == f"/{movie_url}", 'large_image_path'] = large_image_path
             
             # Save the updated database
+            update_progress(0.9, "Saving updated database")
             df.to_csv(DATA_FILE, index=False)
+            update_progress(1.0, "Complete")
+            
+            # Get the Letterboxd URL if available
+            if 'letterboxd_url' in movie_details:
+                letterboxd_url = movie_details['letterboxd_url']
         else:
             print(f"Using cached description and image for {movie_url}")
         
         response_data = {
             'description': description,
-            'large_image_path': large_image_path
+            'large_image_path': large_image_path,
+            'letterboxd_url': letterboxd_url
         }
         print(f"Sending response: {response_data}")
         return jsonify(response_data)
@@ -236,6 +315,20 @@ def search():
                               genres=genres)
     except Exception as e:
         return render_template('index.html', error=f"Error searching: {str(e)}")
+
+@app.errorhandler(Exception)
+def handle_error(error):
+    if isinstance(error, HTTPException):
+        return jsonify({
+            'error': error.description,
+            'status_code': error.code
+        }), error.code
+    
+    print(f"Unexpected error: {format_exc()}")
+    return jsonify({
+        'error': 'Internal server error',
+        'status_code': 500
+    }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
