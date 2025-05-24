@@ -1,9 +1,21 @@
-title,year,rating,genre,description,image_path
-Everything Everywhere All at Once,2022,4.27,"Science Fiction, Adventure, Comedy, Action",No description available,images/Everything_Everywhere_All_at_Once_2022.jpg
-Spider-Man: Into the Spider-Verse,2018,4.41,"Adventure, Animation, Action, Science Fiction",No description available,images/Spider_Man__Into_the_Spider_Verse_2018.jpg
-Parasite,2019,4.54,"Thriller, Comedy, Drama",No description available,images/Parasite_2019.jpg
-Interstellar,2014,4.42,"Science Fiction, Drama, Adventure",No description available,images/Interstellar_2014.jpg
-Barbie,2023,3.77,"Comedy, Adventure",No description available,images/Barbie_2023.jpg
-Parasite,2019,4.54,"Thriller, Comedy, Drama",No description available,images/Parasite_2019.jpg
-Parasite,2019,4.54,"Thriller, Comedy, Drama",No description available,images/Parasite_2019.jpg
-Pulp Fiction,1994,4.25,"Thriller, Crime",No description available,images/Pulp_Fiction_1994.jpg
+title,year,rating,genre,description,image_path,movie_url,large_image_path
+Everything Everywhere All at Once,2022,4.27,action,"<strong>The universe is so much bigger than you realize.</strong><br>An aging Chinese immigrant is swept up in an insane adventure, where she alone can save what’s important to her by connecting with the lives she could have led in other universes.",images/Everything_Everywhere_All_at_Once_2022.jpg,/film/everything-everywhere-all-at-once/,images/Everything_Everywhere_All_at_Once_2022_large.jpg
+Spider-Man: Into the Spider-Verse,2018,4.41,action,"<strong>More than one wears the mask.</strong><br>Struggling to find his place in the world while juggling school and family, Brooklyn teenager Miles Morales is unexpectedly bitten by a radioactive spider and develops unfathomable powers just like the one and only Spider-Man. While wrestling with the implications of his new abilities, Miles discovers a super collider created by the madman Wilson “Kingpin” Fisk, causing others from across the Spider-Verse to be inadvertently transported to his dimension.",images/Spider_Man__Into_the_Spider_Verse_2018.jpg,/film/spider-man-into-the-spider-verse/,images/Spider_Man__Into_the_Spider_Verse_2018_large.jpg
+Parasite,2019,4.54,drama,Act like you own the place.,images/Parasite_2019.jpg,/film/parasite-2019/,images/Parasite_2019_large.jpg
+Interstellar,2014,4.42,drama,<strong>Mankind was born on Earth. It was never meant to die here.</strong><br><br>The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.,images/Interstellar_2014.jpg,/film/interstellar/,images/Interstellar_2014_large.jpg
+Barbie,2023,3.77,comedy,"She’s everything. He’s just Ken.
+
+Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans.",images/Barbie_2023.jpg,/film/barbie/,images/Barbie_2023_large.jpg
+Parasite,2019,4.54,comedy,Act like you own the place.,images/Parasite_2019.jpg,/film/parasite-2019/,images/Parasite_2019_large.jpg
+Parasite,2019,4.54,thriller,Act like you own the place.,images/Parasite_2019.jpg,/film/parasite-2019/,images/Parasite_2019_large.jpg
+Pulp Fiction,1994,4.25,thriller,You won’t know the facts until you’ve seen the fiction.,images/Pulp_Fiction_1994.jpg,/film/pulp-fiction/,images/Pulp_Fiction_1994_large.jpg
+The Substance,2024,3.78,horror,"<strong>Have you ever dreamt of a better version of yourself?</strong><br>A fading celebrity decides to use a black market drug, a cell-replicating substance that temporarily creates a younger, better version of herself.",images/The_Substance_2024.jpg,/film/the-substance/,images/The_Substance_2024_large.jpg
+Get Out,2017,4.15,horror,No description available,images/Get_Out_2017.jpg,/film/get-out-2017/,images/Get_Out_2017_large.jpg
+La La Land,2016,4.12,romance,Details,images/La_La_Land_2016.jpg,/film/la-la-land/,
+Eternal Sunshine of the Spotless Mind,2004,4.24,romance,Details,images/Eternal_Sunshine_of_the_Spotless_Mind_2004.jpg,/film/eternal-sunshine-of-the-spotless-mind/,
+Barbie,2023,3.77,adventure,"She’s everything. He’s just Ken.
+
+Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans.",images/Barbie_2023.jpg,/film/barbie/,images/Barbie_2023_large.jpg
+Interstellar,2014,4.42,adventure,<strong>Mankind was born on Earth. It was never meant to die here.</strong><br><br>The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.,images/Interstellar_2014.jpg,/film/interstellar/,images/Interstellar_2014_large.jpg
+Pulp Fiction,1994,4.25,crime,You won’t know the facts until you’ve seen the fiction.,images/Pulp_Fiction_1994.jpg,/film/pulp-fiction/,images/Pulp_Fiction_1994_large.jpg
+Joker,2019,3.84,crime,Put on a happy face.,images/Joker_2019.jpg,/film/joker-2019/,images/Joker_2019_large.jpg

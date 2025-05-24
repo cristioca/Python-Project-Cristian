@@ -30,7 +30,7 @@ def scrape_movies():
             return False
         
         # List of genres to scrape
-        genres = ['action', 'drama', 'comedy', 'thriller']
+        genres = ['action', 'drama', 'comedy', 'thriller', 'horror', 'romance', 'adventure', 'crime', 'sci-fi']
         movie_data = []
         
         # Loop through each genre
@@ -106,7 +106,7 @@ def scrape_movies():
                             'year': year,
                             'rating': rating,
                             'genre': genre,
-                            'description': "Click for description",
+                            'description': "Details",
                             'image_path': image_path,
                             'movie_url': movie_url
                         })
@@ -144,26 +144,103 @@ def scrape_movies():
             pass
 
 def get_movie_description(movie_url):
-    """Get movie description from its details page"""
+    """Get movie description and larger image from its details page"""
     try:
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
         driver = webdriver.Chrome(options=chrome_options)
         
         url = f"https://letterboxd.com{movie_url}"
+        print(f"Fetching URL: {url}")
         driver.get(url)
-        time.sleep(2)
+        time.sleep(3)  # Increase wait time
+        
+        # Save the page source for debugging
+        with open('data/action_full_page.html', 'w', encoding='utf-8') as f:
+            f.write(driver.page_source)
         
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        desc_element = soup.find('div', class_='film-text-content')
-        if desc_element and desc_element.find('p'):
-            return desc_element.find('p').text.strip()
-        return "No description available"
+        
+        # Get description - combine tagline and synopsis
+        tagline = ""
+        synopsis = ""
+        
+        # Try to find the tagline
+        tagline_element = soup.find('h4', class_='tagline')
+        if tagline_element and tagline_element.text.strip():
+            tagline = tagline_element.text.strip()
+        
+        # Try to find the synopsis in the truncate div
+        truncate_element = soup.find('div', class_='truncate')
+        if truncate_element:
+            p_tag = truncate_element.find('p')
+            if p_tag:
+                synopsis = p_tag.text.strip()
+        
+        # If no synopsis yet, try film-text-content
+        if not synopsis:
+            desc_element = soup.find('div', class_='film-text-content')
+            if desc_element:
+                p_tag = desc_element.find('p')
+                if p_tag:
+                    synopsis = p_tag.text.strip()
+        
+        # If still no synopsis, try review body text
+        if not synopsis:
+            desc_element = soup.find('div', class_='review body-text -prose -hero prettify')
+            if desc_element:
+                p_tag = desc_element.find('p')
+                if p_tag:
+                    synopsis = p_tag.text.strip()
+        
+        # Combine tagline and synopsis with HTML formatting
+        if tagline and synopsis:
+            description = f"<strong>{tagline}</strong><br>{synopsis}"
+        elif tagline:
+            description = f"<strong>{tagline}</strong>"
+        elif synopsis:
+            description = synopsis
+        else:
+            description = "No description available"
+        
+        # Get larger image - try multiple selectors
+        image_url = None
+        
+        # Try poster image first
+        poster_element = soup.find('img', class_='image')
+        if poster_element:
+            image_url = poster_element.get('src')
+        
+        # Try other image locations
+        if not image_url:
+            image_element = soup.find('img', class_='poster-img')
+            if image_element:
+                image_url = image_element.get('src')
+        
+        if not image_url:
+            image_element = soup.find('div', class_='film-poster')
+            if image_element:
+                img_tag = image_element.find('img')
+                if img_tag:
+                    image_url = img_tag.get('src')
+        
+        print(f"Found description: {description[:50]}...")
+        print(f"Found image URL: {image_url}")
+        
+        return {
+            'description': description,
+            'large_image_url': image_url
+        }
         
     except Exception as e:
-        print(f"Error getting description: {e}")
-        return "Error loading description"
+        print(f"Error getting movie details: {e}")
+        return {
+            'description': "Error loading description",
+            'large_image_url': None
+        }
         
     finally:
         try:
@@ -175,9 +252,9 @@ def create_sample_dataset():
     """Create a sample dataset if web scraping fails"""
     sample_data = [
         {'title': 'The Shawshank Redemption', 'year': '1994', 'rating': 9.3, 'genre': 'Drama', 
-         'description': 'Click for description', 'image_path': None, 'movie_url': '/film/the-shawshank-redemption/'},
+         'description': 'Details', 'image_path': None, 'movie_url': '/film/the-shawshank-redemption/'},
         {'title': 'The Godfather', 'year': '1972', 'rating': 9.2, 'genre': 'Crime, Drama', 
-         'description': 'Click for description', 'image_path': None, 'movie_url': '/film/the-godfather/'}
+         'description': 'Details', 'image_path': None, 'movie_url': '/film/the-godfather/'}
     ]
     df = pd.DataFrame(sample_data)
     df.to_csv('data/movies.csv', index=False)

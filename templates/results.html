@@ -4,6 +4,7 @@
     <title>Letterboxd Movie Recommendations - {{ genre }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <style>
         .movie-poster {
             width: 70px;
@@ -47,45 +48,25 @@
             flex: 1;
         }
 
-        .description-link {
+        .details-link {
             color: #00b020;
             cursor: pointer;
             text-decoration: underline;
+            display: inline-block;
+            margin-bottom: 8px;
         }
 
-        .description-link:hover {
+        .details-link:hover {
             color: #008017;
         }
     </style>
-    <script>
-        function loadDescription(movieUrl, element) {
-            if (element.textContent !== 'Click for description') {
-                return;  // Description already loaded
-            }
-            
-            fetch('/movie' + movieUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.description) {
-                        element.textContent = data.description;
-                        element.style.cursor = 'default';
-                        element.style.textDecoration = 'none';
-                        element.style.color = 'inherit';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    element.textContent = 'Error loading description';
-                });
-        }
-    </script>
 </head>
 <body>
     <div class="container">
         <h1>Letterboxd Top Recommendations for {{ genre }}</h1>
         
         {% for movie in recommendations %}
-        <div class="movie-card">
+        <div class="movie-card" data-movie-url="{{ movie.movie_url }}">
             <div class="movie-poster">
                 {% if movie.image_path and movie.image_path.strip() %}
                 <img src="{{ url_for('static', filename=movie.image_path) }}" alt="{{ movie.title }} poster" onerror="this.parentElement.innerHTML='<div class=\'no-poster\'>No Poster Available</div>'">
@@ -97,7 +78,10 @@
                 <h2 class="movie-title">{{ movie.title }} ({{ movie.year }})</h2>
                 <div class="movie-rating">Rating: {{ movie.rating }}/10</div>
                 <div class="movie-genre">{{ movie.genre }}</div>
-                <p class="movie-description description-link" onclick="loadDescription('{{ movie.movie_url }}', this)">{{ movie.description }}</p>
+                <div class="movie-description-container">
+                    <a href="#" class="details-link" onclick="showMovieDetails('{{ movie.movie_url }}'); return false;">Details</a>
+                    <div class="movie-description">Click Details to view description</div>
+                </div>
             </div>
         </div>
         {% endfor %}

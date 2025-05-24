@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from scraper.movie_scraper import scrape_movies, create_sample_dataset, get_movie_description
 from datetime import datetime, timedelta
+import requests
 
 app = Flask(__name__)
 
@@ -35,19 +36,81 @@ def update_database():
 
 @app.route('/movie/<path:movie_url>')
 def get_description(movie_url):
-    """Get and update movie description"""
+    """Get and update movie description and image"""
     try:
-        # Get description from Letterboxd
-        description = get_movie_description(f"/{movie_url}")
+        print(f"Received request for movie URL: /{movie_url}")
         
-        # Update CSV file
+        # Update CSV file with description
         df = pd.read_csv(DATA_FILE)
-        df.loc[df['movie_url'] == f"/{movie_url}", 'description'] = description
-        df.to_csv(DATA_FILE, index=False)
         
-        return jsonify({'description': description})
+        # Check if the movie exists in the database
+        if not any(df['movie_url'] == f"/{movie_url}"):
+            print(f"Movie URL not found in database: /{movie_url}")
+            return jsonify({'error': 'Movie not found in database'}), 404
+        
+        # Check if we already have a description that's not the default
+        movie_row = df.loc[df['movie_url'] == f"/{movie_url}"]
+        description = movie_row['description'].iloc[0]
+        large_image_path = movie_row['large_image_path'].iloc[0] if 'large_image_path' in movie_row and not pd.isna(movie_row['large_image_path'].iloc[0]) else None
+        
+        # If we don't have a proper description or large image, fetch them
+        if description == "Details" or not large_image_path:
+            print("Description or large image not found in database, fetching from web...")
+            # Get description and image from Letterboxd
+            movie_details = get_movie_description(f"/{movie_url}")
+            print(f"Movie details: {movie_details}")
+            
+            # Update description if needed
+            if description == "Details":
+                df.loc[df['movie_url'] == f"/{movie_url}", 'description'] = movie_details['description']
+                description = movie_details['description']
+            
+            # Download and save larger image if available and needed
+            if movie_details['large_image_url'] and not large_image_path:
+                try:
+                    movie_title = df.loc[df['movie_url'] == f"/{movie_url}", 'title'].iloc[0]
+                    movie_year = df.loc[df['movie_url'] == f"/{movie_url}", 'year'].iloc[0]
+                    safe_title = "".join([c if c.isalnum() else "_" for c in movie_title])
+                    image_filename = f"{safe_title}_{movie_year}_large.jpg"
+                    large_image_path = f"images/{image_filename}"
+                    
+                    # Check if the image already exists
+                    if not os.path.exists(os.path.join('static', large_image_path)):
+                        print(f"Downloading image from: {movie_details['large_image_url']}")
+                        response = requests.get(movie_details['large_image_url'], stream=True)
+                        if response.status_code == 200:
+                            with open(os.path.join('static', large_image_path), 'wb') as img_file:
+                                for chunk in response.iter_content(1024):
+                                    img_file.write(chunk)
+                            print(f"Image saved to: {large_image_path}")
+                        else:
+                            print(f"Failed to download image: {response.status_code}")
+                    else:
+                        print(f"Image already exists at: {large_image_path}")
+                except Exception as img_err:
+                    print(f"Error downloading large image: {img_err}")
+            
+            # Update the large image path in the database
+            if large_image_path:
+                df.loc[df['movie_url'] == f"/{movie_url}", 'large_image_path'] = large_image_path
+            
+            # Save the updated database
+            df.to_csv(DATA_FILE, index=False)
+        else:
+            print(f"Using cached description and image for {movie_url}")
+        
+        response_data = {
+            'description': description,
+            'large_image_path': large_image_path
+        }
+        print(f"Sending response: {response_data}")
+        return jsonify(response_data)
     except Exception as e:
+        print(f"Error in get_description: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/')
 def index():
@@ -79,9 +142,10 @@ def index():
         # Extract all unique genres from the comma-separated lists
         all_genres = []
         for genre_list in df['genre'].dropna():
-            genres = [g.strip() for g in genre_list.split(',')]
+            genres = [g.strip().title() for g in genre_list.split(',')]
             all_genres.extend(genres)
         genres = sorted(list(set(all_genres)))
+
         
         if not genres:
             genres = ['Action', 'Drama', 'Comedy', 'Thriller', 'Horror', 'Science Fiction', 
@@ -108,6 +172,9 @@ def recommend():
         # Sort by rating (assuming you have a rating column)
         if 'rating' in df.columns:
             movies = movies.sort_values(by='rating', ascending=False)
+        
+        # Convert genres to title case
+        movies['genre'] = movies['genre'].apply(lambda x: ', '.join(g.strip().title() for g in x.split(',')))
         
         # Get top 5 recommendations
         recommendations = movies.head(5).to_dict('records')
@@ -147,13 +214,16 @@ def search():
         if min_rating and min_rating.replace('.', '', 1).isdigit():
             df = df[df['rating'] >= float(min_rating)]
         
+        # Convert genres to title case
+        df['genre'] = df['genre'].apply(lambda x: ', '.join(g.strip().title() for g in x.split(',')))
+        
         # Get results
         results = df.sort_values(by='rating', ascending=False).head(10).to_dict('records')
         
         # Get all genres for the filter dropdown
         all_genres = []
         for genre_list in df['genre'].dropna():
-            genres = [g.strip() for g in genre_list.split(',')]
+            genres = [g.strip().title() for g in genre_list.split(',')]
             all_genres.extend(genres)
         genres = sorted(list(set(all_genres)))
         
