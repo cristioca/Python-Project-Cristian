@@ -8,131 +8,204 @@ import os
 import random
 import requests
 from pathlib import Path
+import concurrent.futures
+import threading
 
-def scrape_movies(progress_callback=None):
-    """
-    Scrape basic movie data from Letterboxd main genre pages
-    """
-    try:
-        # Create directories if they don't exist
-        os.makedirs('static/images', exist_ok=True)
-        
-        if progress_callback:
-            progress_callback(0.05, "Initializing Chrome driver")
-        
+# Thread-local storage for browser instances
+thread_local = threading.local()
+
+def get_driver():
+    """Get a thread-local Chrome driver instance"""
+    if not hasattr(thread_local, "driver"):
         # Set up Chrome options
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        
+        thread_local.driver = webdriver.Chrome(options=chrome_options)
+    return thread_local.driver
+
+def close_drivers():
+    """Close all thread-local drivers"""
+    if hasattr(thread_local, "driver"):
         try:
-            driver = webdriver.Chrome(options=chrome_options)
-        except Exception as e:
-            print(f"Error initializing Chrome driver: {e}")
-            return False
+            thread_local.driver.quit()
+        except:
+            pass
+
+def scrape_genre(genre, max_movies=3, progress_callback=None, progress_start=0, progress_range=0.1, should_stop=None):
+    """Scrape movies for a specific genre"""
+    try:
+        driver = get_driver()
+        url = f"https://letterboxd.com/films/genre/{genre}/size/small/"
+        print(f"Scraping {genre} movies...")
         
-        # List of genres to scrape
-        genres = ['action', 'drama', 'comedy', 'thriller', 'horror', 'romance', 'adventure', 'crime', 'sci-fi']
+        # Check if we should stop
+        if should_stop and should_stop():
+            print(f"Stopping scrape for genre {genre}")
+            return []
+            
+        driver.get(url)
+        time.sleep(2)
+        
+        # Get movie containers
+        movie_containers = BeautifulSoup(driver.page_source, 'html.parser').find_all('li', class_='poster-container')
+        print(f"Found {len(movie_containers)} movies for {genre}")
+        
         movie_data = []
         
-        # Loop through each genre
-        for i, genre in enumerate(genres):
-            if progress_callback:
-                progress = 0.1 + (i / len(genres) * 0.7)  # Progress from 10% to 80%
-                progress_callback(progress, f"Scraping {genre} movies...")
-                
-            url = f"https://letterboxd.com/films/genre/{genre}/size/small/"
-            print(f"Scraping {genre} movies...")
-            
+        # Process each movie (limit to max_movies per genre)
+        for j, container in enumerate(movie_containers[:max_movies]):
             try:
-                driver.get(url)
-                time.sleep(2)
+                # Check if we should stop
+                if should_stop and should_stop():
+                    print(f"Stopping scrape for genre {genre} at movie {j+1}")
+                    break
+                    
+                if progress_callback:
+                    sub_progress = progress_start + (j / max_movies) * progress_range
+                    progress_callback(sub_progress, f"Processing {genre} movie {j+1}/{max_movies}")
+                    
+                # Extract basic movie info
+                poster_div = container.find('div', class_='film-poster')
+                if not poster_div:
+                    continue
+                    
+                title = poster_div.get('data-film-name', "Unknown")
                 
-                # Get movie containers
-                movie_containers = BeautifulSoup(driver.page_source, 'html.parser').find_all('li', class_='poster-container')
-                print(f"Found {len(movie_containers)} movies for {genre}")
+                # Get year and rating
+                frame_link = poster_div.find('a', class_='frame')
+                if not frame_link:
+                    continue
+                    
+                year = "Unknown"
+                frame_title = frame_link.find('span', class_='frame-title')
+                if frame_title and '(' in frame_title.text and ')' in frame_title.text:
+                    year = frame_title.text.split('(')[-1].split(')')[0]
                 
-                # Process each movie (limit to 3 per genre)
-                for j, container in enumerate(movie_containers[:3]):  # Adjust limit as needed
+                rating = 0.0
+                if frame_link.get('data-original-title'):
+                    rating_text = frame_link.get('data-original-title')
+                    if rating_text and rating_text.split(')')[-1].strip():
+                        try:
+                            rating = float(rating_text.split(')')[-1].strip())
+                        except:
+                            pass
+                
+                # Get image URL and movie URL
+                img_tag = poster_div.find('img')
+                image_url = img_tag.get('src') if img_tag else None
+                film_link = poster_div.find('a')
+                movie_url = film_link.get('href') if film_link else None
+                
+                # Download image
+                image_path = None
+                if image_url:
                     try:
-                        if progress_callback:
-                            sub_progress = progress + (j / 3) * (0.7 / len(genres))
-                            progress_callback(sub_progress, f"Processing {genre} movie {j+1}/3")
-                            
-                        # Extract basic movie info
-                        poster_div = container.find('div', class_='film-poster')
-                        if not poster_div:
-                            continue
-                            
-                        title = poster_div.get('data-film-name', "Unknown")
+                        safe_title = "".join([c if c.isalnum() else "_" for c in title])
+                        image_filename = f"{safe_title}_{year}.jpg"
+                        image_path = f"images/{image_filename}"
+                        full_path = os.path.join('static', image_path)
                         
-                        # Get year and rating
-                        frame_link = poster_div.find('a', class_='frame')
-                        if not frame_link:
-                            continue
-                            
-                        year = "Unknown"
-                        frame_title = frame_link.find('span', class_='frame-title')
-                        if frame_title and '(' in frame_title.text and ')' in frame_title.text:
-                            year = frame_title.text.split('(')[-1].split(')')[0]
-                        
-                        rating = 0.0
-                        if frame_link.get('data-original-title'):
-                            rating_text = frame_link.get('data-original-title')
-                            if rating_text and rating_text.split(')')[-1].strip():
-                                try:
-                                    rating = float(rating_text.split(')')[-1].strip())
-                                except:
-                                    pass
-                        
-                        # Get image URL and movie URL
-                        img_tag = poster_div.find('img')
-                        image_url = img_tag.get('src') if img_tag else None
-                        film_link = poster_div.find('a')
-                        movie_url = film_link.get('href') if film_link else None
-                        
-                        # Download image
+                        response = requests.get(image_url, stream=True)
+                        if response.status_code == 200:
+                            with open(full_path, 'wb') as img_file:
+                                for chunk in response.iter_content(1024):
+                                    img_file.write(chunk)
+                            print(f"Downloaded image for {title}")
+                    except Exception as img_err:
+                        print(f"Error downloading image: {img_err}")
                         image_path = None
-                        if image_url:
-                            try:
-                                safe_title = "".join([c if c.isalnum() else "_" for c in title])
-                                image_filename = f"{safe_title}_{year}.jpg"
-                                image_path = f"images/{image_filename}"
-                                full_path = os.path.join('static', image_path)
-                                
-                                response = requests.get(image_url, stream=True)
-                                if response.status_code == 200:
-                                    with open(full_path, 'wb') as img_file:
-                                        for chunk in response.iter_content(1024):
-                                            img_file.write(chunk)
-                                    print(f"Downloaded image for {title}")
-                            except Exception as img_err:
-                                print(f"Error downloading image: {img_err}")
-                                image_path = None
-                        
-                        # Add movie data
-                        movie_data.append({
-                            'title': title,
-                            'year': year,
-                            'rating': rating,
-                            'genre': genre,
-                            'description': "Details",
-                            'image_path': image_path,
-                            'movie_url': movie_url
-                        })
-                        print(f"Scraped: {title} ({year})")
-                        
-                    except Exception as e:
-                        print(f"Error processing movie: {e}")
-                        continue
+                
+                # Add movie data
+                movie_data.append({
+                    'title': title,
+                    'year': year,
+                    'rating': rating,
+                    'genre': genre,
+                    'description': "Details",
+                    'image_path': image_path,
+                    'movie_url': movie_url
+                })
+                print(f"Scraped: {title} ({year})")
                 
             except Exception as e:
-                print(f"Error scraping genre {genre}: {e}")
+                print(f"Error processing movie: {e}")
                 continue
+                
+        return movie_data
         
-        # Save data to CSV
+    except Exception as e:
+        print(f"Error scraping genre {genre}: {e}")
+        return []
+
+def scrape_movies(progress_callback=None, should_stop=None):
+    """
+    Scrape basic movie data from Letterboxd main genre pages using multithreading
+    """
+    try:
+        # Create directories if they don't exist
+        os.makedirs('static/images', exist_ok=True)
+        
+        if progress_callback:
+            progress_callback(0.05, "Initializing scraper")
+        
+        # List of genres to scrape
+        genres = ['action', 'drama', 'comedy', 'thriller', 'horror', 'romance', 'adventure', 'crime', 'sci-fi',
+                 'animation', 'family', 'fantasy', 'history', 'mystery', 'science-fiction', 'war', 'western']
+        movie_data = []
+        
+        # Calculate progress segments
+        progress_per_genre = 0.8 / len(genres)
+        
+        # Use ThreadPoolExecutor for parallel scraping
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            # Create a dictionary to track futures
+            future_to_genre = {}
+            
+            # Submit scraping tasks for each genre
+            for i, genre in enumerate(genres):
+                # Check if we should stop before submitting more tasks
+                if should_stop and should_stop():
+                    print("Stopping before submitting more genres")
+                    break
+                    
+                progress_start = 0.1 + (i * progress_per_genre)
+                future = executor.submit(
+                    scrape_genre, 
+                    genre, 
+                    max_movies=3,  # Adjust limit as needed
+                    progress_callback=progress_callback,
+                    progress_start=progress_start,
+                    progress_range=progress_per_genre,
+                    should_stop=should_stop
+                )
+                future_to_genre[future] = genre
+            
+            # Collect results as they complete
+            for future in concurrent.futures.as_completed(future_to_genre):
+                genre = future_to_genre[future]
+                try:
+                    # Check if we should stop before processing more results
+                    if should_stop and should_stop():
+                        print("Stopping before processing more results")
+                        break
+                        
+                    genre_data = future.result()
+                    movie_data.extend(genre_data)
+                    print(f"Completed scraping {genre} with {len(genre_data)} movies")
+                except Exception as e:
+                    print(f"Error in genre {genre}: {e}")
+        
+        # Check if we should stop before saving data
+        if should_stop and should_stop():
+            print("Update stopped. No data will be written to CSV.")
+            if progress_callback:
+                progress_callback(1.0, "Update stopped. No changes made.")
+            return False
+            
+        # Save data to CSV only if not stopped
         if progress_callback:
             progress_callback(0.9, "Saving data to CSV")
             
@@ -164,11 +237,7 @@ def scrape_movies(progress_callback=None):
         return False
         
     finally:
-        try:
-            if 'driver' in locals():
-                driver.quit()
-        except:
-            pass
+        close_drivers()
 
 def get_movie_description(movie_url):
     """Get movie description, cast and larger image from its details page"""
@@ -289,9 +358,123 @@ def get_movie_description(movie_url):
         except:
             pass
 
-def quick_update_titles(progress_callback=None):
+def process_genre_quick(genre, max_movies=10, existing_movies=None, progress_callback=None, progress_start=0, progress_range=0.1, should_stop=None):
+    """Process a single genre for quick update"""
+    try:
+        driver = get_driver()
+        url = f"https://letterboxd.com/films/genre/{genre}/size/small/"
+        print(f"Scraping {genre} movies (titles only)...")
+        
+        # Check if we should stop
+        if should_stop and should_stop():
+            print(f"Stopping quick update for genre {genre}")
+            return []
+            
+        driver.get(url)
+        time.sleep(2)
+        
+        # Get movie containers
+        movie_containers = BeautifulSoup(driver.page_source, 'html.parser').find_all('li', class_='poster-container')
+        print(f"Found {len(movie_containers)} movies for {genre}")
+        
+        movie_data = []
+        
+        # Process each movie (limit to max_movies per genre)
+        for j, container in enumerate(movie_containers[:max_movies]):
+            try:
+                # Check if we should stop
+                if should_stop and should_stop():
+                    print(f"Stopping quick update for genre {genre} at movie {j+1}")
+                    break
+                    
+                if progress_callback:
+                    sub_progress = progress_start + (j / max_movies) * progress_range
+                    progress_callback(sub_progress, f"Processing {genre} movie {j+1}/{max_movies}")
+                    
+                # Extract basic movie info
+                poster_div = container.find('div', class_='film-poster')
+                if not poster_div:
+                    continue
+                    
+                title = poster_div.get('data-film-name', "Unknown")
+                
+                # Get year, rating and movie URL
+                frame_link = poster_div.find('a', class_='frame')
+                if not frame_link:
+                    continue
+                    
+                year = "Unknown"
+                frame_title = frame_link.find('span', class_='frame-title')
+                if frame_title and '(' in frame_title.text and ')' in frame_title.text:
+                    year = frame_title.text.split('(')[-1].split(')')[0]
+                
+                # Extract rating from data-original-title attribute
+                rating = 0.0
+                if frame_link.get('data-original-title'):
+                    rating_text = frame_link.get('data-original-title')
+                    if rating_text and rating_text.split(')')[-1].strip():
+                        try:
+                            rating = float(rating_text.split(')')[-1].strip())
+                        except:
+                            pass
+                
+                # Get movie URL
+                film_link = poster_div.find('a')
+                movie_url = film_link.get('href') if film_link else None
+                
+                # Skip if movie already exists in database
+                if existing_movies and movie_url in existing_movies:
+                    print(f"Skipping existing movie: {title}")
+                    continue
+                
+                # Get image URL
+                img_tag = poster_div.find('img')
+                image_url = img_tag.get('src') if img_tag else None
+                
+                # Download image (small version only)
+                image_path = None
+                if image_url:
+                    try:
+                        safe_title = "".join([c if c.isalnum() else "_" for c in title])
+                        image_filename = f"{safe_title}_{year}.jpg"
+                        image_path = f"images/{image_filename}"
+                        full_path = os.path.join('static', image_path)
+                        
+                        response = requests.get(image_url, stream=True)
+                        if response.status_code == 200:
+                            with open(full_path, 'wb') as img_file:
+                                for chunk in response.iter_content(1024):
+                                    img_file.write(chunk)
+                            print(f"Downloaded image for {title}")
+                    except Exception as img_err:
+                        print(f"Error downloading image: {img_err}")
+                        image_path = None
+                
+                # Add movie data with minimal information
+                movie_data.append({
+                    'title': title,
+                    'year': year,
+                    'rating': rating,
+                    'genre': genre,
+                    'description': "Details",  # Default description
+                    'image_path': image_path,
+                    'movie_url': movie_url
+                })
+                print(f"Quick scraped: {title} ({year})")
+                
+            except Exception as e:
+                print(f"Error processing movie: {e}")
+                continue
+                
+        return movie_data
+        
+    except Exception as e:
+        print(f"Error scraping genre {genre}: {e}")
+        return []
+
+def quick_update_titles(progress_callback=None, should_stop=None):
     """
-    Quickly extract movie titles and genres from the current page without fetching detailed information
+    Quickly extract movie titles and genres using multithreading
     """
     try:
         # Create directories if they don't exist
@@ -300,22 +483,9 @@ def quick_update_titles(progress_callback=None):
         if progress_callback:
             progress_callback(0.05, "Initializing Chrome driver")
         
-        # Set up Chrome options
-        chrome_options = Options()
-        chrome_options.add_argument("--headless=new")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        
-        try:
-            driver = webdriver.Chrome(options=chrome_options)
-        except Exception as e:
-            print(f"Error initializing Chrome driver: {e}")
-            return False
-        
         # List of genres to scrape
-        genres = ['action', 'drama', 'comedy', 'thriller', 'horror', 'romance', 'adventure', 'crime', 'sci-fi']
-        movie_data = []
+        genres = ['action', 'drama', 'comedy', 'thriller', 'horror', 'romance', 'adventure', 'crime', 'sci-fi',
+                 'animation', 'family', 'fantasy', 'history', 'mystery', 'science-fiction', 'war', 'western']
         
         # Check if existing data file exists and load it
         data_file = Path('data/movies.csv')
@@ -334,110 +504,58 @@ def quick_update_titles(progress_callback=None):
             except Exception as e:
                 print(f"Error reading existing data: {e}")
         
-        # Loop through each genre
-        for i, genre in enumerate(genres):
-            if progress_callback:
-                progress = 0.15 + (i / len(genres) * 0.7)  # Progress from 15% to 85%
-                progress_callback(progress, f"Scraping {genre} movies...")
-                
-            url = f"https://letterboxd.com/films/genre/{genre}/size/small/"
-            print(f"Scraping {genre} movies (titles only)...")
-            
-            try:
-                driver.get(url)
-                time.sleep(2)
-                
-                # Get movie containers
-                movie_containers = BeautifulSoup(driver.page_source, 'html.parser').find_all('li', class_='poster-container')
-                print(f"Found {len(movie_containers)} movies for {genre}")
-                
-                # Process each movie (limit to 10 per genre for quick update)
-                for j, container in enumerate(movie_containers[:10]):  # Adjust limit as needed
-                    try:
-                        if progress_callback:
-                            sub_progress = progress + (j / 10) * (0.7 / len(genres))
-                            progress_callback(sub_progress, f"Processing {genre} movie {j+1}/10")
-                            
-                        # Extract basic movie info
-                        poster_div = container.find('div', class_='film-poster')
-                        if not poster_div:
-                            continue
-                            
-                        title = poster_div.get('data-film-name', "Unknown")
-                        
-                        # Get year, rating and movie URL
-                        frame_link = poster_div.find('a', class_='frame')
-                        if not frame_link:
-                            continue
-                            
-                        year = "Unknown"
-                        frame_title = frame_link.find('span', class_='frame-title')
-                        if frame_title and '(' in frame_title.text and ')' in frame_title.text:
-                            year = frame_title.text.split('(')[-1].split(')')[0]
-                        
-                        # Extract rating from data-original-title attribute
-                        rating = 0.0
-                        if frame_link.get('data-original-title'):
-                            rating_text = frame_link.get('data-original-title')
-                            if rating_text and rating_text.split(')')[-1].strip():
-                                try:
-                                    rating = float(rating_text.split(')')[-1].strip())
-                                except:
-                                    pass
-                        
-                        # Get movie URL
-                        film_link = poster_div.find('a')
-                        movie_url = film_link.get('href') if film_link else None
-                        
-                        # Skip if movie already exists in database
-                        if movie_url in existing_movies:
-                            print(f"Skipping existing movie: {title}")
-                            continue
-                        
-                        # Get image URL
-                        img_tag = poster_div.find('img')
-                        image_url = img_tag.get('src') if img_tag else None
-                        
-                        # Download image (small version only)
-                        image_path = None
-                        if image_url:
-                            try:
-                                safe_title = "".join([c if c.isalnum() else "_" for c in title])
-                                image_filename = f"{safe_title}_{year}.jpg"
-                                image_path = f"images/{image_filename}"
-                                full_path = os.path.join('static', image_path)
-                                
-                                response = requests.get(image_url, stream=True)
-                                if response.status_code == 200:
-                                    with open(full_path, 'wb') as img_file:
-                                        for chunk in response.iter_content(1024):
-                                            img_file.write(chunk)
-                                    print(f"Downloaded image for {title}")
-                            except Exception as img_err:
-                                print(f"Error downloading image: {img_err}")
-                                image_path = None
-                        
-                        # Add movie data with minimal information
-                        movie_data.append({
-                            'title': title,
-                            'year': year,
-                            'rating': rating,  # Use extracted rating
-                            'genre': genre,
-                            'description': "Details",  # Default description
-                            'image_path': image_path,
-                            'movie_url': movie_url
-                        })
-                        print(f"Quick scraped: {title} ({year})")
-                        
-                    except Exception as e:
-                        print(f"Error processing movie: {e}")
-                        continue
-                
-            except Exception as e:
-                print(f"Error scraping genre {genre}: {e}")
-                continue
+        # Calculate progress segments
+        progress_per_genre = 0.7 / len(genres)
+        movie_data = []
         
-        # Save data to CSV (append to existing or create new)
+        # Use ThreadPoolExecutor for parallel scraping
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            # Create a dictionary to track futures
+            future_to_genre = {}
+            
+            # Submit scraping tasks for each genre
+            for i, genre in enumerate(genres):
+                # Check if we should stop before submitting more tasks
+                if should_stop and should_stop():
+                    print("Stopping before submitting more genres for quick update")
+                    break
+                    
+                progress_start = 0.15 + (i * progress_per_genre)
+                future = executor.submit(
+                    process_genre_quick, 
+                    genre, 
+                    max_movies=10,  # Adjust limit as needed
+                    existing_movies=existing_movies,
+                    progress_callback=progress_callback,
+                    progress_start=progress_start,
+                    progress_range=progress_per_genre,
+                    should_stop=should_stop
+                )
+                future_to_genre[future] = genre
+            
+            # Collect results as they complete
+            for future in concurrent.futures.as_completed(future_to_genre):
+                genre = future_to_genre[future]
+                try:
+                    # Check if we should stop before processing more results
+                    if should_stop and should_stop():
+                        print("Stopping before processing more results for quick update")
+                        break
+                        
+                    genre_data = future.result()
+                    movie_data.extend(genre_data)
+                    print(f"Completed quick scraping {genre} with {len(genre_data)} movies")
+                except Exception as e:
+                    print(f"Error in genre {genre}: {e}")
+        
+        # Check if we should stop before saving data
+        if should_stop and should_stop():
+            print("Quick update stopped. No data will be written to CSV.")
+            if progress_callback:
+                progress_callback(1.0, "Update stopped. No changes made.")
+            return False
+            
+        # Save data to CSV (append to existing or create new) only if not stopped
         if progress_callback:
             progress_callback(0.9, "Saving data to database")
             
@@ -479,11 +597,7 @@ def quick_update_titles(progress_callback=None):
         return False
         
     finally:
-        try:
-            if 'driver' in locals():
-                driver.quit()
-        except:
-            pass
+        close_drivers()
 
 def create_sample_dataset():
     """Create a sample dataset if web scraping fails"""

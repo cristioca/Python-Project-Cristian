@@ -27,6 +27,9 @@ progress_data = {
     'complete': False
 }
 
+# Flag to signal stopping the update process
+stop_update_flag = False
+
 def should_update_database():
     """Check if database should be updated based on last modification time"""
     if not os.path.exists(DATA_FILE):
@@ -43,21 +46,22 @@ def update_progress(progress, status):
     
 def reset_progress():
     """Reset progress tracking"""
-    global progress_data
+    global progress_data, stop_update_flag
     progress_data = {
         'progress': 0.0,
         'status': 'Not started',
         'complete': False
     }
+    stop_update_flag = False
 
 def run_quick_update():
     """Run quick update in a separate thread with progress tracking"""
     try:
         from scraper.movie_scraper import quick_update_titles
-        success = quick_update_titles(update_progress)
+        success = quick_update_titles(update_progress, lambda: stop_update_flag)
         progress_data['complete'] = True
         progress_data['progress'] = 1.0
-        progress_data['status'] = 'Complete' if success else 'Failed'
+        progress_data['status'] = 'Complete' if success else 'Stopped' if stop_update_flag else 'Failed'
     except Exception as e:
         progress_data['status'] = f"Error: {str(e)}"
         progress_data['complete'] = True
@@ -65,10 +69,10 @@ def run_quick_update():
 def run_full_update():
     """Run full update in a separate thread with progress tracking"""
     try:
-        success = scrape_movies(update_progress)
+        success = scrape_movies(update_progress, lambda: stop_update_flag)
         progress_data['complete'] = True
         progress_data['progress'] = 1.0
-        progress_data['status'] = 'Complete' if success else 'Failed'
+        progress_data['status'] = 'Complete' if success else 'Stopped' if stop_update_flag else 'Failed'
     except Exception as e:
         progress_data['status'] = f"Error: {str(e)}"
         progress_data['complete'] = True
@@ -77,6 +81,13 @@ def run_full_update():
 def get_progress():
     """Return current progress data as JSON"""
     return jsonify(progress_data)
+
+@app.route('/stop_update')
+def stop_update():
+    """Stop the update process"""
+    global stop_update_flag
+    stop_update_flag = True
+    return jsonify({"status": "stopping"})
 
 @app.route('/quick_update')
 def quick_update():

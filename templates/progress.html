@@ -33,6 +33,19 @@
             margin-top: 10px;
             color: #bbbbbb;
         }
+        .stop-btn {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .stop-btn:hover {
+            background-color: #b71c1c;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -57,6 +70,18 @@
                     }
                 });
         }
+        
+        function stopUpdate() {
+            if (confirm('Are you sure you want to stop the update? No changes will be made to the database.')) {
+                fetch('/stop_update')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('stop-btn').disabled = true;
+                        document.getElementById('stop-btn').textContent = 'Stopping...';
+                        document.getElementById('progress-status').textContent = 'Stopping update...';
+                    });
+            }
+        }
     </script>
 </head>
 <body>
@@ -71,9 +96,11 @@
                 </div>
             </div>
             <div id="progress-status" class="progress-status">Initializing...</div>
+            <button id="stop-btn" class="stop-btn" onclick="stopUpdate()">Stop Update</button>
         </div>
         
         <p>Please wait while we update the movie database. This may take a few minutes.</p>
+        <p>You can stop the update at any time. No changes will be made to the database if stopped.</p>
     </div>
 </body>
 </html>
