@@ -240,13 +240,17 @@ def index():
 @app.route('/recommend', methods=['POST'])
 def recommend():
     selected_genre = request.form.get('genre')
+    is_random = request.form.get('random') == 'true'
     
     try:
         # Load the data
         df = pd.read_csv(DATA_FILE)
         
-        # Filter by genre
-        movies = df[df['genre'].str.contains(selected_genre, case=False)]
+        # Filter by genre (unless "All Genres" is selected)
+        if selected_genre == "All Genres":
+            movies = df
+        else:
+            movies = df[df['genre'].str.contains(selected_genre, case=False)]
         
         # Deduplicate movies by URL
         unique_movies = []
@@ -254,18 +258,31 @@ def recommend():
         
         for _, movie in movies.iterrows():
             if movie['movie_url'] not in seen_urls:
-                unique_movies.append(movie.to_dict())
+                movie_dict = movie.to_dict()
+                # Convert genre to title case
+                if 'genre' in movie_dict and movie_dict['genre']:
+                    movie_dict['genre'] = ', '.join(g.strip().title() for g in movie_dict['genre'].split(','))
+                unique_movies.append(movie_dict)
                 seen_urls.add(movie['movie_url'])
         
         # Sort by rating
         unique_movies = sorted(unique_movies, key=lambda x: x['rating'], reverse=True)
         
-        # Get top 5 recommendations
-        recommendations = unique_movies[:5]
-        
-        return render_template('results.html', 
-                              recommendations=recommendations, 
-                              genre=selected_genre)
+        # If random pick is requested, select a random movie
+        if is_random and unique_movies:
+            import random
+            recommendations = [random.choice(unique_movies)]
+            return render_template('results.html', 
+                                  recommendations=recommendations, 
+                                  genre=selected_genre,
+                                  is_random=True)
+        else:
+            # Get top 5 recommendations
+            recommendations = unique_movies[:5]
+            
+            return render_template('results.html', 
+                                  recommendations=recommendations, 
+                                  genre=selected_genre)
     except Exception as e:
         return render_template('index.html', 
                               error=f"Error processing recommendation: {str(e)}",
@@ -304,7 +321,11 @@ def search():
         
         for _, movie in df.iterrows():
             if movie['movie_url'] not in seen_urls:
-                unique_movies.append(movie.to_dict())
+                movie_dict = movie.to_dict()
+                # Convert genre to title case
+                if 'genre' in movie_dict and movie_dict['genre']:
+                    movie_dict['genre'] = ', '.join(g.strip().title() for g in movie_dict['genre'].split(','))
+                unique_movies.append(movie_dict)
                 seen_urls.add(movie['movie_url'])
         
         # Sort by rating

@@ -3,6 +3,7 @@
 <head>
     <title>Letterboxd Movie Recommender</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .flex-container {
@@ -64,19 +65,21 @@
                             <input type="text" name="query" placeholder="Search by title or description" class="search-input">
                         </div>
                         <div class="form-row">
-                            <div class="form-group half">
+                            <div class="form-group third">
                                 <label for="min_year">From Year:</label>
                                 <input type="number" name="min_year" id="min_year" min="1900" max="2023">
                             </div>
-                            <div class="form-group half">
+                            <div class="form-group third">
                                 <label for="max_year">To Year:</label>
                                 <input type="number" name="max_year" id="max_year" min="1900" max="2023">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="min_rating">Minimum Rating:</label>
-                            <input type="range" name="min_rating" id="min_rating" min="0" max="10" step="0.1" value="0" oninput="this.nextElementSibling.value = this.value">
-                            <output>0</output>
+                            <div class="form-group third rating-group">
+                                <label for="min_rating">Min Rating:</label>
+                                <div class="rating-container">
+                                    <input type="range" name="min_rating" id="min_rating" min="0" max="5" step="0.1" value="0" oninput="document.getElementById('rating-value').innerHTML = this.value">
+                                    <span id="rating-value">0</span>
+                                </div>
+                            </div>
                         </div>
                         <button type="submit" class="btn search-btn">Search</button>
                     </form>
@@ -86,18 +89,22 @@
             <!-- Recommendations Form -->
             <div class="flex-column">
                 <div class="search-section">
-                    <h2>Get Recommendations</h2>
+                    <h2>List Movies</h2>
                     <form action="/recommend" method="post">
                         <div class="form-group">
                             <label for="genre">Select a movie genre:</label>
                             <select name="genre" id="genre" required>
                                 <option value="">-- Select Genre --</option>
+                                <option value="All Genres">All Genres</option>
                                 {% for genre in genres %}
                                 <option value="{{ genre }}">{{ genre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <button type="submit" class="btn">Get Recommendations</button>
+                        <div class="form-group">
+                            <button type="submit" class="btn search-btn">List Top Movies</button>
+                            <button type="submit" class="btn random-pick-btn" name="random" value="true">Random Pick</button>
+                        </div>
                     </form>
                 </div>
             </div>

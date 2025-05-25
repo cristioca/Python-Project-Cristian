@@ -165,6 +165,30 @@ select, input[type="text"], input[type="number"] {
     width: 48%;
 }
 
+.form-group.third {
+    width: 30%;
+    margin-right: 1.5%;
+}
+
+.rating-group {
+    margin-left: 1.5%;
+}
+
+.rating-container {
+    display: flex;
+    align-items: center;
+}
+
+.rating-container input[type="range"] {
+    width: 75%;
+    margin-right: 10px;
+}
+
+#rating-value {
+    min-width: 20px;
+    text-align: right;
+}
+
 .search-section {
     margin-bottom: 30px;
     padding: 20px;
@@ -188,6 +212,15 @@ select, input[type="text"], input[type="number"] {
 
 .search-btn:hover {
     background-color: #388e3c;
+}
+
+.random-pick-btn {
+    background-color: #c62828;
+    margin-left: 10px;
+}
+
+.random-pick-btn:hover {
+    background-color: #d32f2f;
 }
 
 .search-summary {

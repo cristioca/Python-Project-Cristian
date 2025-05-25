@@ -3,12 +3,17 @@
 <head>
     <title>Letterboxd Movie Recommendations - {{ genre }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Letterboxd Top Recommendations for {{ genre }}</h1>
+        {% if is_random %}
+        <h1>Random Movie Pick for {{ genre }}</h1>
+        {% else %}
+        <h1>Top Movies for {{ genre }}</h1>
+        {% endif %}
         
         {% for movie in recommendations %}
         <div class="movie-card" data-movie-url="{{ movie.movie_url }}">
@@ -22,7 +27,7 @@
             <div class="movie-details">
                 <h2 class="movie-title">{{ movie.title }} ({{ movie.year }})</h2>
                 <a href="https://letterboxd.com{{ movie.movie_url }}" target="_blank" class="letterboxd-link">Letterboxd movie page</a>
-                <div class="movie-rating">Rating: {{ movie.rating }}/10</div>
+                <div class="movie-rating">Rating: {{ movie.rating }} out of 5</div>
                 <div class="movie-genre">{{ movie.genre }}</div>
                 <div class="movie-description-container">
                     <a href="#" class="details-link" onclick="showMovieDetails('{{ movie.movie_url }}'); return false;">Details</a>
