@@ -1,13 +1,11 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import os
-from scraper.movie_scraper import scrape_movies, create_sample_dataset, get_movie_description
+# import functions from custom package
+from scraper.movie_scraper import scrape_movies, get_movie_description
 from datetime import datetime, timedelta
 import requests
-from traceback import format_exc
-from werkzeug.exceptions import HTTPException
 import threading
-import time
 
 app = Flask(__name__)
 app.secret_key = 'movie_bot_secret_key'  # Required for session
@@ -84,6 +82,7 @@ def quick_update():
     reset_progress()
     # Start update in background thread
     thread = threading.Thread(target=run_quick_update)
+    # daemon - a background thread that automatically terminates when the main program exits
     thread.daemon = True
     thread.start()
     return render_template('progress.html', operation='Quick Update (only titles)')
@@ -132,6 +131,7 @@ def get_description(movie_url):
             print(f"Movie details: {movie_details}")
             
             # Update description if needed
+            # If we only have a placeholder description, replace it with the real description we just fetched from the web, both in the database and in our current response.
             if description == "Details":
                 df.loc[df['movie_url'] == f"/{movie_url}", 'description'] = movie_details['description']
                 description = movie_details['description']
@@ -140,8 +140,10 @@ def get_description(movie_url):
             if movie_details['large_image_url'] and not large_image_path:
                 try:
                     update_progress(0.7, "Downloading movie image")
+                    # find the row in the DataFrame that has the matching movie URL, extract the movie title from that row, asign to movie_title
                     movie_title = df.loc[df['movie_url'] == f"/{movie_url}", 'title'].iloc[0]
                     movie_year = df.loc[df['movie_url'] == f"/{movie_url}", 'year'].iloc[0]
+                    # replaces all non_alphanumerics with "_"
                     safe_title = "".join([c if c.isalnum() else "_" for c in movie_title])
                     image_filename = f"{safe_title}_{movie_year}_large.jpg"
                     large_image_path = f"images/{image_filename}"
@@ -186,8 +188,6 @@ def get_description(movie_url):
         return jsonify(response_data)
     except Exception as e:
         print(f"Error in get_description: {e}")
-        import traceback
-        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 
@@ -354,17 +354,20 @@ def search():
 
 @app.errorhandler(Exception)
 def handle_error(error):
-    if isinstance(error, HTTPException):
+    # Check if the error has HTTP-related attributes
+    if hasattr(error, 'code') and hasattr(error, 'description'):
         return jsonify({
             'error': error.description,
             'status_code': error.code
         }), error.code
     
-    print(f"Unexpected error: {format_exc()}")
+    print(f"Unexpected error: {str(error)}")
     return jsonify({
         'error': 'Internal server error',
         'status_code': 500
     }), 500
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
