@@ -5,10 +5,12 @@ A Flask-based web application that recommends movies based on genres, using data
 ## Features
 
 - **Web Scraping**: Scrapes movie data from Letterboxd using Beautiful Soup
+- **Multithreaded Processing**: Uses concurrent processing to improve scraping performance
 - **Data Processing**: Uses Pandas for efficient data manipulation and storage
 - **User-friendly Interface**: Clean web interface with responsive design
 - **Background Processing**: Handles long-running tasks in background threads
 - **Progress Tracking**: Real-time progress updates for data operations
+- **Stop Update**: Ability to stop database updates without affecting existing data
 - **Search & Filter**: Find movies by title, description, year, and rating
 - **Random Recommendations**: Get random movie suggestions within a genre or from all genres
 - **Movie Details**: View movie descriptions and images fetched dynamically
@@ -19,32 +21,35 @@ A Flask-based web application that recommends movies based on genres, using data
 - **Data Storage**: CSV files for persistent storage
 - **Scraping Library**: Beautiful Soup for HTML parsing
 - **Data Analysis**: Pandas for data manipulation
-- **Concurrency**: Threading for background operations
+- **Concurrency**: ThreadPoolExecutor for parallel scraping operations
+- **Thread Safety**: Thread-local storage for browser instances
 - **Error Handling**: Exception handling for robustness
 
 ## Project Structure
 
 ```
-Python-Project-Cristian/
+Movie_Bot/
 ├── README.md               # Project documentation
 ├── requirements.txt        # Dependencies
 ├── app.py                  # Main Flask application
 ├── scraper/                # Scraping module
 │   ├── __init__.py
-│   └── movie_scraper.py    # BS4 scraping code
+│   └── movie_scraper.py    # BS4 scraping code with multithreading
 ├── data/                   # Data storage
 │   └── movies.csv          # Scraped movie data
 ├── static/                 # Static assets
 │   ├── css/
 │   │   └── style.css
 │   ├── js/
-│   │   └── script.js
+│   │   ├── script.js
+│   │   └── progress.js     # Progress tracking JavaScript
+│   ├── favicon.ico         # Site favicon
 │   └── images/             # Movie images
 └── templates/              # HTML templates
     ├── index.html          # Home page
     ├── results.html        # Recommendation results
     ├── search_results.html # Search results
-    └── progress.html       # Progress tracking
+    └── progress.html       # Progress tracking with stop functionality
 ```
 
 ## How to Run
@@ -57,8 +62,8 @@ Python-Project-Cristian/
 
 1. Clone this repository
    ```
-   git clone https://github.com/yourusername/Python-Project-Cristian.git
-   cd Python-Project-Cristian
+   git clone https://github.com/yourusername/Movie_Bot.git
+   cd Movie_Bot
    ```
 
 2. Install dependencies
@@ -83,8 +88,8 @@ Python-Project-Cristian/
 
 2. Clone the repository and navigate to the project directory:
    ```
-   git clone https://github.com/yourusername/Python-Project-Cristian.git
-   cd Python-Project-Cristian
+   git clone https://github.com/yourusername/Movie_Bot.git
+   cd Movie_Bot
    ```
 
 3. Create a virtual environment (recommended):
@@ -121,15 +126,22 @@ Python-Project-Cristian/
 4. **Search**: Use the search bar to find movies by title or description / actor
 5. **Filter**: Apply filters for year range and minimum rating
 6. **Movie Details**: Click on a movie to see its full description, cast and larger image
+7. **Database Updates**: 
+   - Use "Quick Update" to add new movie titles only
+   - Use "Update Database" for a full refresh with descriptions
+   - Click "Stop Update" at any time to halt the process without affecting the database
 
 ## Implementation Details
 
 - **Data Collection**: The application can scrape movie data from Letterboxd, storing titles, ratings, genres, descriptions and URLs
+- **Multithreaded Scraping**: Uses ThreadPoolExecutor to scrape multiple genres simultaneously
+- **Thread-Safe Browser Instances**: Each thread gets its own Chrome driver instance
 - **Error Handling**: Comprehensive error handling ensures the application remains stable
 - **Background Processing**: Long-running operations like database updates run in background threads
 - **Progress Tracking**: Real-time progress updates for operations like database updates
 - **Safe File Handling**: Ensures filenames are safe for all operating systems
 - **Responsive Design**: Works on both desktop and mobile browsers
+- **Graceful Stopping**: Can stop updates without corrupting the database
 
 ## License
 
