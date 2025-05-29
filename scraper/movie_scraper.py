@@ -241,6 +241,7 @@ def scrape_movies(progress_callback=None, should_stop=None):
 
 def get_movie_description(movie_url):
     """Get movie description, cast and larger image from its details page"""
+    driver = None
     try:
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")
@@ -248,6 +249,10 @@ def get_movie_description(movie_url):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         driver = webdriver.Chrome(options=chrome_options)
+        
+        # Add rate limiting delay (2-4 seconds) before fetching movie details
+        delay = 2 + 2 * random.random()  # Random delay between 2-4 seconds
+        time.sleep(delay)
         
         url = f"https://letterboxd.com{movie_url}"
         print(f"Fetching URL: {url}")
@@ -354,9 +359,10 @@ def get_movie_description(movie_url):
         
     finally:
         try:
-            driver.quit()
-        except:
-            pass
+            if driver:
+                driver.quit()
+        except Exception as e:
+            print(f"Error closing driver: {e}")
 
 def process_genre_quick(genre, max_movies=10, existing_movies=None, progress_callback=None, progress_start=0, progress_range=0.1, should_stop=None):
     """Process a single genre for quick update"""
@@ -369,6 +375,10 @@ def process_genre_quick(genre, max_movies=10, existing_movies=None, progress_cal
         if should_stop and should_stop():
             print(f"Stopping quick update for genre {genre}")
             return []
+        
+        # Add rate limiting delay (1-3 seconds) before each page request
+        delay = 1 + 2 * random.random()  # Random delay between 1-3 seconds
+        time.sleep(delay)
             
         driver.get(url)
         time.sleep(2)

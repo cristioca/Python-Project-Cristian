@@ -112,6 +112,8 @@ def update_database():
 @app.route('/movie/<path:movie_url>')
 def get_description(movie_url):
     """Get and update movie description, cast and image"""
+    from scraper.movie_scraper import close_drivers
+    
     try:
         print(f"Received request for movie URL: /{movie_url}")
         
@@ -200,6 +202,9 @@ def get_description(movie_url):
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+    finally:
+        # Ensure all browser instances are closed
+        close_drivers()
 
 
 @app.route('/')
