@@ -250,10 +250,6 @@ def get_movie_description(movie_url):
         chrome_options.add_argument("--disable-dev-shm-usage")
         driver = webdriver.Chrome(options=chrome_options)
         
-        # Add rate limiting delay (2-4 seconds) before fetching movie details
-        delay = 2 + 2 * random.random()  # Random delay between 2-4 seconds
-        time.sleep(delay)
-        
         url = f"https://letterboxd.com{movie_url}"
         print(f"Fetching URL: {url}")
         driver.get(url)
