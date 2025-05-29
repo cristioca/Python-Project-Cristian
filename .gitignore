@@ -4,3 +4,4 @@ __pycache__/
 *.py[cod]
 *$py.class
 .env
+data/action_full_page.html
