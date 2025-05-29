@@ -204,6 +204,9 @@ def get_description(movie_url):
 
 @app.route('/')
 def index():
+    # Get current year for the search form
+    current_year = datetime.now().year
+    
     # Initialize status variables
     db_status = {
         'exists': os.path.exists(DATA_FILE),
@@ -227,7 +230,7 @@ def index():
             db_status['status'] = 'Empty'
             return render_template('index.html', genres=default_genres, 
                                 error="No movies found in database. Using default genres.",
-                                db_status=db_status)
+                                db_status=db_status, current_year=current_year)
         
         # Extract all unique genres from the comma-separated lists
         all_genres = []
@@ -244,9 +247,9 @@ def index():
     except Exception as e:
         db_status['status'] = 'Error reading data'
         return render_template('index.html', error=f"Error loading data: {str(e)}",
-                            db_status=db_status)
+                            db_status=db_status, current_year=current_year)
         
-    return render_template('index.html', genres=genres, db_status=db_status)
+    return render_template('index.html', genres=genres, db_status=db_status, current_year=current_year)
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
