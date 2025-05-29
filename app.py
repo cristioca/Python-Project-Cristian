@@ -421,19 +421,42 @@ def search():
         return render_template('index.html', error=f"Error searching: {str(e)}")
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html',
+                          error_code="404",
+                          error_title="Page Not Found",
+                          error_description="The page you're looking for doesn't exist or has been moved.",
+                          error_details=str(error)), 404
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('error.html',
+                          error_code="500",
+                          error_title="Internal Server Error",
+                          error_description="Something went wrong on our end. Please try again later.",
+                          error_details=str(error)), 500
+
 @app.errorhandler(Exception)
 def handle_error(error):
     if isinstance(error, HTTPException):
-        return jsonify({
-            'error': error.description,
-            'status_code': error.code
-        }), error.code
+        if error.code == 404:
+            return page_not_found(error)
+        elif error.code == 500:
+            return internal_server_error(error)
+        else:
+            return render_template('error.html',
+                                  error_code=str(error.code),
+                                  error_title="Error",
+                                  error_description=error.description,
+                                  error_details=None), error.code
     
     print(f"Unexpected error: {format_exc()}")
-    return jsonify({
-        'error': 'Internal server error',
-        'status_code': 500
-    }), 500
+    return render_template('error.html',
+                          error_code="500",
+                          error_title="Internal Server Error",
+                          error_description="Something went wrong on our end. Please try again later.",
+                          error_details=None), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
