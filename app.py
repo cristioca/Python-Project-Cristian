@@ -258,18 +258,35 @@ def index():
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    selected_genre = request.form.get('genre')
+    # Get and validate genre parameter
+    selected_genre = request.form.get('genre', '')
+    if not selected_genre:
+        return render_template('index.html', 
+                              error="Please select a genre",
+                              genres=sorted(pd.read_csv(DATA_FILE)['genre'].unique()),
+                              current_year=datetime.now().year)
+    
+    # Validate random parameter
     is_random = request.form.get('random') == 'true'
     
     try:
         # Load the data
         df = pd.read_csv(DATA_FILE)
         
-        # Filter by genre (unless "All Genres" is selected)
-        if selected_genre == "All Genres":
+        # Filter by genre (unless "Any Genre" is selected)
+        if selected_genre == "Any Genre":
             movies = df
         else:
+            # Sanitize genre input
+            selected_genre = selected_genre.strip()[:50]  # Limit length for security
             movies = df[df['genre'].str.contains(selected_genre, case=False)]
+            
+            # If no movies found for this genre, return to index with error
+            if len(movies) == 0:
+                return render_template('index.html', 
+                                      error=f"No movies found for genre: {selected_genre}",
+                                      genres=sorted(df['genre'].unique()),
+                                      current_year=datetime.now().year)
         
         # Deduplicate movies by URL
         unique_movies = []
@@ -310,28 +327,61 @@ def recommend():
 # Search and Filtering Functionality
 @app.route('/search', methods=['GET'])
 def search():
-    query = request.args.get('query', '').lower()
-    min_year = request.args.get('min_year', '')
-    max_year = request.args.get('max_year', '')
-    min_rating = request.args.get('min_rating', '')
+    # Get and sanitize input parameters
+    query = request.args.get('query', '').lower().strip()
+    
+    # Validate year inputs
+    try:
+        min_year = request.args.get('min_year', '')
+        if min_year:
+            min_year = int(min_year)
+            if min_year < 1900 or min_year > datetime.now().year:
+                min_year = 1900
+    except (ValueError, TypeError):
+        min_year = 1900
+        
+    try:
+        max_year = request.args.get('max_year', '')
+        if max_year:
+            max_year = int(max_year)
+            if max_year < 1900 or max_year > datetime.now().year:
+                max_year = datetime.now().year
+    except (ValueError, TypeError):
+        max_year = datetime.now().year
+        
+    # Ensure min_year <= max_year
+    if min_year and max_year and min_year > max_year:
+        min_year, max_year = max_year, min_year
+    
+    # Validate rating input
+    try:
+        min_rating = request.args.get('min_rating', '')
+        if min_rating:
+            min_rating = float(min_rating)
+            if min_rating < 0 or min_rating > 5:
+                min_rating = 0
+    except (ValueError, TypeError):
+        min_rating = 0
     
     try:
         df = pd.read_csv(DATA_FILE)
         
         # Filter by search query (title or description)
         if query:
+            # Limit query length for security
+            query = query[:100]
             df = df[df['title'].str.lower().str.contains(query, na=False) | 
                    df['description'].str.lower().str.contains(query, na=False)]
         
         # Filter by year range
-        if min_year and min_year.isdigit():
+        if min_year:
             df = df[df['year'].astype(str).str.extract(r'(\d+)', expand=False).astype(float) >= float(min_year)]
         
-        if max_year and max_year.isdigit():
+        if max_year:
             df = df[df['year'].astype(str).str.extract(r'(\d+)', expand=False).astype(float) <= float(max_year)]
         
         # Filter by minimum rating
-        if min_rating and min_rating.replace('.', '', 1).isdigit():
+        if min_rating:
             df = df[df['rating'] >= float(min_rating)]
         
         # Deduplicate movies by URL
