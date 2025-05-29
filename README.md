@@ -37,6 +37,7 @@ Movie_Bot/
 │   └── movie_scraper.py    # BS4 scraping code with multithreading
 ├── data/                   # Data storage
 │   └── movies.csv          # Scraped movie data
+├── screenshots/            # Application screenshots
 ├── static/                 # Static assets
 │   ├── css/
 │   │   └── style.css
@@ -130,6 +131,20 @@ Movie_Bot/
    - Use "Quick Update" to add new movie titles only
    - Use "Update Database" for a full refresh with descriptions
    - Click "Stop Update" at any time to halt the process without affecting the database
+
+## Screenshots
+
+Screenshots of the application can be found in the `screenshots` directory:
+
+- `01_home_page.png`: The main interface of the application
+- `02_update_progress_quick.png`: Quick update of the database with Stop button
+- `03_update_progress_full.png`: Full update of the database with Stop button
+- `04_selecting_genres.png`: The dropdown for choosing a particular genre or any genres
+- `05_search_results.png`: Example of movie search results
+- `06_loading_details.png`: Dynamic loading of details
+- `07_movie_details.png`: Detailed view of a movie from the list
+- `08_random_movie_pick.png`: Random movie pick window
+- `09_top_rated_movies_for_genre.png`: Top rated movies for a particular genre
 
 ## Implementation Details
 
