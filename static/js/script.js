@@ -17,7 +17,7 @@ function showMovieDetails(movieUrl) {
             
             detailsLink.style.display = 'none';
             // Show loading spinner
-            descElement.innerHTML = '<div class="loading-spinner"></div> Loading details...';
+            descElement.innerHTML = '<div class="loading-spinner"></div> Loading details from Letterboxd, this may take about 10 seconds...';
             
             // Fix URL encoding - don't remove the leading slash
             const fetchUrl = `/movie/${encodeURIComponent(movieUrl)}`;

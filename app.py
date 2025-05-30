@@ -439,24 +439,71 @@ def internal_server_error(error):
 
 @app.errorhandler(Exception)
 def handle_error(error):
-    if isinstance(error, HTTPException):
+    # Check if it's an HTTP error (has a code attribute)
+    if hasattr(error, 'code'):
         if error.code == 404:
             return page_not_found(error)
         elif error.code == 500:
             return internal_server_error(error)
         else:
+            description = getattr(error, 'description', str(error))
             return render_template('error.html',
                                   error_code=str(error.code),
                                   error_title="Error",
-                                  error_description=error.description,
+                                  error_description=description,
                                   error_details=None), error.code
     
-    print(f"Unexpected error: {format_exc()}")
+    print(f"Unexpected error: {str(error)}")
     return render_template('error.html',
                           error_code="500",
                           error_title="Internal Server Error",
                           error_description="Something went wrong on our end. Please try again later.",
                           error_details=None), 500
 
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        import sys
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
+
+# Create a sample CSV file if it doesn't exist
+if not os.path.exists(DATA_FILE):
+    try:
+        bundled_csv = resource_path(os.path.join('data', 'movies.csv'))
+        if os.path.exists(bundled_csv):
+            import shutil
+            shutil.copy(bundled_csv, DATA_FILE)
+            print(f"Copied bundled movies.csv to {os.path.abspath(DATA_FILE)}")
+    except Exception as e:
+        print(f"Warning: Could not copy bundled data: {e}")
+        # Create a minimal CSV file
+        with open(DATA_FILE, 'w') as f:
+            f.write('title,year,rating,genre,description,image_path,movie_url\n')
+            f.write('Sample Movie,2023,4.5,Drama,Details,None,/film/sample-movie/\n')
+        print("Created sample movies.csv file")
+
+def open_browser():
+    """Open browser after a short delay"""
+    import time
+    import webbrowser
+    time.sleep(1.5)  # Wait for Flask to start
+    webbrowser.open('http://localhost:5000')
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Print startup message
+    print("Starting Movie Picker Bot...")
+    print(f"Working directory: {os.getcwd()}")
+    print(f"Data directory: {os.path.abspath('data')}")
+    print(f"Movies CSV path: {os.path.abspath(DATA_FILE)}")
+    
+    # Start browser in a separate thread
+    import threading
+    threading.Thread(target=open_browser, daemon=True).start()
+    
+    # Start Flask app
+    app.run(debug=False, host='0.0.0.0', port=5000, use_reloader=False)

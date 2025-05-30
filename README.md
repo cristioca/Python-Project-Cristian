@@ -30,8 +30,10 @@ A Flask-based web application that recommends movies based on genres, using data
 ```
 Movie_Bot/
 ├── README.md               # Project documentation
-├── requirements.txt        # Dependencies
+├── requirements.txt        # Dependencies for the application
+├── build_requirements.txt  # Dependencies for building the executable
 ├── app.py                  # Main Flask application
+├── build_exe_simple.py     # Script to build Windows executable
 ├── scraper/                # Scraping module
 │   ├── __init__.py
 │   └── movie_scraper.py    # BS4 scraping code with multithreading
@@ -50,7 +52,8 @@ Movie_Bot/
     ├── index.html          # Home page
     ├── results.html        # Recommendation results
     ├── search_results.html # Search results
-    └── progress.html       # Progress tracking with stop functionality
+    ├── progress.html       # Progress tracking with stop functionality
+    └── error.html          # Error page template
 ```
 
 ## How to Run
@@ -77,7 +80,26 @@ Movie_Bot/
    python app.py
    ```
 
-4. Open your browser and go to http://localhost:5000
+4. The application will automatically open in your default web browser at http://localhost:5000
+
+### Building a Windows Executable
+
+1. Install the build requirements:
+   ```
+   pip install -r build_requirements.txt
+   ```
+
+2. Run the build script:
+   ```
+   python build_exe_simple.py
+   ```
+
+3. The executable will be created in the `dist` folder as `MoviePickerBot.exe`
+
+4. To run the executable:
+   - Copy `MoviePickerBot.exe` to a folder where you want to run it
+   - Run the executable - it will automatically open in your browser
+   - A console window will show helpful status information
 
 ### Running on Linux
 
@@ -118,6 +140,33 @@ Movie_Bot/
    ```
    nohup python3 app.py &
    ```
+
+## Windows Executable
+
+A standalone Windows executable is available for users who don't have Python installed.
+
+### Features of the Executable
+
+- Single-file executable with all dependencies bundled
+- Automatically opens in the default web browser
+- Creates necessary data folders if they don't exist
+- Shows a console window with status information
+- Includes all templates, static files, and the scraper module
+
+### Technical Details
+
+The executable is built using PyInstaller with the following configuration:
+- Single-file mode (--onefile)
+- Console window enabled for debugging (--console)
+- All necessary folders included (templates, static, data, scraper)
+- Hidden imports for all required libraries
+
+When the executable runs, it:
+1. Extracts necessary files to a temporary directory
+2. Creates data folders if they don't exist
+3. Opens the default web browser to http://localhost:5000
+4. Starts the Flask server
+5. Shows status information in the console window
 
 ## Usage
 
