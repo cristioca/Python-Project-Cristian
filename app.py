@@ -25,6 +25,9 @@ progress_data = {
     'complete': False
 }
 
+# Flag to signal stopping the update process
+stop_update_flag = False
+
 def should_update_database():
     """Check if database should be updated based on last modification time"""
     if not os.path.exists(DATA_FILE):
@@ -41,21 +44,22 @@ def update_progress(progress, status):
     
 def reset_progress():
     """Reset progress tracking"""
-    global progress_data
+    global progress_data, stop_update_flag
     progress_data = {
         'progress': 0.0,
         'status': 'Not started',
         'complete': False
     }
+    stop_update_flag = False
 
 def run_quick_update():
     """Run quick update in a separate thread with progress tracking"""
     try:
         from scraper.movie_scraper import quick_update_titles
-        success = quick_update_titles(update_progress)
+        success = quick_update_titles(update_progress, lambda: stop_update_flag)
         progress_data['complete'] = True
         progress_data['progress'] = 1.0
-        progress_data['status'] = 'Complete' if success else 'Failed'
+        progress_data['status'] = 'Complete' if success else 'Stopped' if stop_update_flag else 'Failed'
     except Exception as e:
         progress_data['status'] = f"Error: {str(e)}"
         progress_data['complete'] = True
@@ -63,10 +67,10 @@ def run_quick_update():
 def run_full_update():
     """Run full update in a separate thread with progress tracking"""
     try:
-        success = scrape_movies(update_progress)
+        success = scrape_movies(update_progress, lambda: stop_update_flag)
         progress_data['complete'] = True
         progress_data['progress'] = 1.0
-        progress_data['status'] = 'Complete' if success else 'Failed'
+        progress_data['status'] = 'Complete' if success else 'Stopped' if stop_update_flag else 'Failed'
     except Exception as e:
         progress_data['status'] = f"Error: {str(e)}"
         progress_data['complete'] = True
@@ -75,6 +79,13 @@ def run_full_update():
 def get_progress():
     """Return current progress data as JSON"""
     return jsonify(progress_data)
+
+@app.route('/stop_update')
+def stop_update():
+    """Stop the update process"""
+    global stop_update_flag
+    stop_update_flag = True
+    return jsonify({"status": "stopping"})
 
 @app.route('/quick_update')
 def quick_update():
@@ -100,6 +111,8 @@ def update_database():
 @app.route('/movie/<path:movie_url>')
 def get_description(movie_url):
     """Get and update movie description, cast and image"""
+    from scraper.movie_scraper import close_drivers
+    
     try:
         print(f"Received request for movie URL: /{movie_url}")
         
@@ -189,10 +202,16 @@ def get_description(movie_url):
     except Exception as e:
         print(f"Error in get_description: {e}")
         return jsonify({'error': str(e)}), 500
+    finally:
+        # Ensure all browser instances are closed
+        close_drivers()
 
 
 @app.route('/')
 def index():
+    # Get current year for the search form
+    current_year = datetime.now().year
+    
     # Initialize status variables
     db_status = {
         'exists': os.path.exists(DATA_FILE),
@@ -216,7 +235,7 @@ def index():
             db_status['status'] = 'Empty'
             return render_template('index.html', genres=default_genres, 
                                 error="No movies found in database. Using default genres.",
-                                db_status=db_status)
+                                db_status=db_status, current_year=current_year)
         
         # Extract all unique genres from the comma-separated lists
         all_genres = []
@@ -233,24 +252,41 @@ def index():
     except Exception as e:
         db_status['status'] = 'Error reading data'
         return render_template('index.html', error=f"Error loading data: {str(e)}",
-                            db_status=db_status)
+                            db_status=db_status, current_year=current_year)
         
-    return render_template('index.html', genres=genres, db_status=db_status)
+    return render_template('index.html', genres=genres, db_status=db_status, current_year=current_year)
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    selected_genre = request.form.get('genre')
+    # Get and validate genre parameter
+    selected_genre = request.form.get('genre', '')
+    if not selected_genre:
+        return render_template('index.html', 
+                              error="Please select a genre",
+                              genres=sorted(pd.read_csv(DATA_FILE)['genre'].unique()),
+                              current_year=datetime.now().year)
+    
+    # Validate random parameter
     is_random = request.form.get('random') == 'true'
     
     try:
         # Load the data
         df = pd.read_csv(DATA_FILE)
         
-        # Filter by genre (unless "All Genres" is selected)
-        if selected_genre == "All Genres":
+        # Filter by genre (unless "Any Genre" is selected)
+        if selected_genre == "Any Genre":
             movies = df
         else:
+            # Sanitize genre input
+            selected_genre = selected_genre.strip()[:50]  # Limit length for security
             movies = df[df['genre'].str.contains(selected_genre, case=False)]
+            
+            # If no movies found for this genre, return to index with error
+            if len(movies) == 0:
+                return render_template('index.html', 
+                                      error=f"No movies found for genre: {selected_genre}",
+                                      genres=sorted(df['genre'].unique()),
+                                      current_year=datetime.now().year)
         
         # Deduplicate movies by URL
         unique_movies = []
@@ -291,28 +327,61 @@ def recommend():
 # Search and Filtering Functionality
 @app.route('/search', methods=['GET'])
 def search():
-    query = request.args.get('query', '').lower()
-    min_year = request.args.get('min_year', '')
-    max_year = request.args.get('max_year', '')
-    min_rating = request.args.get('min_rating', '')
+    # Get and sanitize input parameters
+    query = request.args.get('query', '').lower().strip()
+    
+    # Validate year inputs
+    try:
+        min_year = request.args.get('min_year', '')
+        if min_year:
+            min_year = int(min_year)
+            if min_year < 1900 or min_year > datetime.now().year:
+                min_year = 1900
+    except (ValueError, TypeError):
+        min_year = 1900
+        
+    try:
+        max_year = request.args.get('max_year', '')
+        if max_year:
+            max_year = int(max_year)
+            if max_year < 1900 or max_year > datetime.now().year:
+                max_year = datetime.now().year
+    except (ValueError, TypeError):
+        max_year = datetime.now().year
+        
+    # Ensure min_year <= max_year
+    if min_year and max_year and min_year > max_year:
+        min_year, max_year = max_year, min_year
+    
+    # Validate rating input
+    try:
+        min_rating = request.args.get('min_rating', '')
+        if min_rating:
+            min_rating = float(min_rating)
+            if min_rating < 0 or min_rating > 5:
+                min_rating = 0
+    except (ValueError, TypeError):
+        min_rating = 0
     
     try:
         df = pd.read_csv(DATA_FILE)
         
         # Filter by search query (title or description)
         if query:
+            # Limit query length for security
+            query = query[:100]
             df = df[df['title'].str.lower().str.contains(query, na=False) | 
                    df['description'].str.lower().str.contains(query, na=False)]
         
         # Filter by year range
-        if min_year and min_year.isdigit():
+        if min_year:
             df = df[df['year'].astype(str).str.extract(r'(\d+)', expand=False).astype(float) >= float(min_year)]
         
-        if max_year and max_year.isdigit():
+        if max_year:
             df = df[df['year'].astype(str).str.extract(r'(\d+)', expand=False).astype(float) <= float(max_year)]
         
         # Filter by minimum rating
-        if min_rating and min_rating.replace('.', '', 1).isdigit():
+        if min_rating:
             df = df[df['rating'] >= float(min_rating)]
         
         # Deduplicate movies by URL
@@ -352,22 +421,42 @@ def search():
         return render_template('index.html', error=f"Error searching: {str(e)}")
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html',
+                          error_code="404",
+                          error_title="Page Not Found",
+                          error_description="The page you're looking for doesn't exist or has been moved.",
+                          error_details=str(error)), 404
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('error.html',
+                          error_code="500",
+                          error_title="Internal Server Error",
+                          error_description="Something went wrong on our end. Please try again later.",
+                          error_details=str(error)), 500
+
 @app.errorhandler(Exception)
 def handle_error(error):
-    # Check if the error has HTTP-related attributes
-    if hasattr(error, 'code') and hasattr(error, 'description'):
-        return jsonify({
-            'error': error.description,
-            'status_code': error.code
-        }), error.code
+    if isinstance(error, HTTPException):
+        if error.code == 404:
+            return page_not_found(error)
+        elif error.code == 500:
+            return internal_server_error(error)
+        else:
+            return render_template('error.html',
+                                  error_code=str(error.code),
+                                  error_title="Error",
+                                  error_description=error.description,
+                                  error_details=None), error.code
     
-    print(f"Unexpected error: {str(error)}")
-    return jsonify({
-        'error': 'Internal server error',
-        'status_code': 500
-    }), 500
-
-
+    print(f"Unexpected error: {format_exc()}")
+    return render_template('error.html',
+                          error_code="500",
+                          error_title="Internal Server Error",
+                          error_description="Something went wrong on our end. Please try again later.",
+                          error_details=None), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

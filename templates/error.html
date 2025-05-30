@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ error_code }} - Letterboxd Movie Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .error-code {
+            font-size: 72px;
+            color: #d32f2f;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .error-details {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: left;
+            margin-bottom: 30px;
+            overflow-wrap: break-word;
+        }
+        .home-link {
+            display: inline-block;
+            background-color: #1976d2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .home-link:hover {
+            background-color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-container">
+            <div class="error-code">{{ error_code }}</div>
+            <div class="error-message">{{ error_title }}</div>
+            <p>{{ error_description }}</p>
+            
+            {% if error_details %}
+            <div class="error-details">
+                <p>{{ error_details }}</p>
+            </div>
+            {% endif %}
+            
+            <a href="{{ url_for('index') }}" class="home-link">Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

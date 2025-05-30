@@ -33,12 +33,47 @@
             margin-top: 10px;
             color: #bbbbbb;
         }
+        .stop-btn {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .stop-btn:hover {
+            background-color: #b71c1c;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Start checking progress as soon as page loads
             checkProgress();
             setInterval(checkProgress, 1000);
+            
+            // Fallback for browsers that don't support fetch
+            if (!window.fetch) {
+                console.log("Browser doesn't support fetch, using XMLHttpRequest instead");
+                window.fetch = function(url) {
+                    return new Promise(function(resolve, reject) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.onload = function() {
+                            resolve({
+                                json: function() {
+                                    return Promise.resolve(JSON.parse(xhr.responseText));
+                                }
+                            });
+                        };
+                        xhr.onerror = function() {
+                            reject(new Error("Network error"));
+                        };
+                        xhr.open('GET', url);
+                        xhr.send();
+                    });
+                };
+            }
         });
         
         function checkProgress() {
@@ -51,11 +86,45 @@
                     } else {
                         // Update progress bar
                         const percent = Math.round(data.progress * 100);
-                        document.getElementById('progress-bar').style.width = percent + '%';
-                        document.getElementById('progress-text').textContent = percent + '%';
-                        document.getElementById('progress-status').textContent = data.status;
+                        updateProgressBar(percent, data.status);
                     }
+                })
+                .catch(error => {
+                    console.error("Error checking progress:", error);
+                    document.getElementById('progress-status').textContent = "Error checking progress. Retrying...";
                 });
+        }
+        
+        function updateProgressBar(percent, status) {
+            // Update the progress bar width
+            var progressBar = document.getElementById('progress-bar');
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+            }
+            
+            // Update the progress text
+            var progressText = document.getElementById('progress-text');
+            if (progressText) {
+                progressText.textContent = percent + '%';
+            }
+            
+            // Update the status text
+            var progressStatus = document.getElementById('progress-status');
+            if (progressStatus) {
+                progressStatus.textContent = status;
+            }
+        }
+        
+        function stopUpdate() {
+            if (confirm('Are you sure you want to stop the update? No changes will be made to the database.')) {
+                fetch('/stop_update')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('stop-btn').disabled = true;
+                        document.getElementById('stop-btn').textContent = 'Stopping...';
+                        document.getElementById('progress-status').textContent = 'Stopping update...';
+                    });
+            }
         }
     </script>
 </head>
@@ -71,9 +140,11 @@
                 </div>
             </div>
             <div id="progress-status" class="progress-status">Initializing...</div>
+            <button id="stop-btn" class="stop-btn" onclick="stopUpdate()">Stop Update</button>
         </div>
         
         <p>Please wait while we update the movie database. This may take a few minutes.</p>
+        <p>You can stop the update at any time. No changes will be made to the database if stopped.</p>
     </div>
 </body>
 </html>

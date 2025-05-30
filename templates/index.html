@@ -62,16 +62,16 @@
                     <h2>Search Movies</h2>
                     <form action="/search" method="get">
                         <div class="form-group">
-                            <input type="text" name="query" placeholder="Search by title or description" class="search-input">
+                            <input type="text" name="query" placeholder="Search by title or description" class="search-input" maxlength="100">
                         </div>
                         <div class="form-row">
                             <div class="form-group third">
                                 <label for="min_year">From Year:</label>
-                                <input type="number" name="min_year" id="min_year" min="1900" max="2023">
+                                <input type="number" name="min_year" id="min_year" min="1900" max="{{ current_year }}">
                             </div>
                             <div class="form-group third">
                                 <label for="max_year">To Year:</label>
-                                <input type="number" name="max_year" id="max_year" min="1900" max="2023">
+                                <input type="number" name="max_year" id="max_year" min="1900" max="{{ current_year }}">
                             </div>
                             <div class="form-group third rating-group">
                                 <label for="min_rating">Min Rating:</label>
@@ -95,7 +95,7 @@
                             <label for="genre">Select a movie genre:</label>
                             <select name="genre" id="genre" required>
                                 <option value="">-- Select Genre --</option>
-                                <option value="All Genres">All Genres</option>
+                                <option value="All Genres">Any Genre</option>
                                 {% for genre in genres %}
                                 <option value="{{ genre }}">{{ genre }}</option>
                                 {% endfor %}
